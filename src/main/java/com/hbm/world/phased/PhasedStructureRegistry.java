@@ -42,7 +42,10 @@ public final class PhasedStructureRegistry {
         register("hbm:arctic_vault", ArcticVault.INSTANCE);
         register("hbm:barrel", Barrel.INSTANCE);
         register("hbm:bedrock_oil_deposit", BedrockOilDeposit.INSTANCE);
-        register("hbm:bedrock_ore_overworld", BedrockOre.OVERWORLD);
+        register("hbm:bedrock_ore_overworld_tier1", BedrockOre.OVERWORLD_BY_TIER[1]);
+        register("hbm:bedrock_ore_overworld_tier2", BedrockOre.OVERWORLD_BY_TIER[2]);
+        register("hbm:bedrock_ore_overworld_tier3", BedrockOre.OVERWORLD_BY_TIER[3]);
+        register("hbm:bedrock_ore_overworld_tier4", BedrockOre.OVERWORLD_BY_TIER[4]);
         register("hbm:bedrock_ore_nether_glowstone", BedrockOre.NETHER_GLOWSTONE);
         register("hbm:bedrock_ore_nether_quartz", BedrockOre.NETHER_QUARTZ);
         register("hbm:bedrock_ore_nether_powder_fire", BedrockOre.NETHER_POWDER_FIRE);
