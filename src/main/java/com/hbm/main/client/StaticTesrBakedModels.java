@@ -228,6 +228,9 @@ public final class StaticTesrBakedModels {
                     .doubleSided()
                     .item(1.0F, 0.0F, 0.0F, 0.0F, -0.5F, 0.0F, 0.0F)
                     .gui(0.0D, -2.0D, 0.0D, 6.0D),
+            normalSpec(ModBlocks.radio_autocal, "models/machines/autocal.obj", "models/machines/autocal", yawMap().meta(12, 90).meta(13, 270).meta(14, 180).meta(15, 0).build())
+                    .doubleSided()
+                    .gui(0, -4, 0, 6.25),
             normalSpec(ModBlocks.fusion_coupler, "models/fusion/coupler.obj", "models/fusion/coupler", yawMap().meta(12, 180).meta(13, 0).meta(14, 270).meta(15, 90).build())
                     .item(0.5F, RAD_90, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F)
                     .gui(0.0D, -3.0D, 0.0D, 6.0D, 90.0D),
