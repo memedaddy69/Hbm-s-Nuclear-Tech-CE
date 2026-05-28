@@ -826,7 +826,7 @@ public class ModItems {
     public static final Item ingot_am241 = new ItemCustomLore("ingot_am241").setCreativeTab(MainRegistry.partsTab);
     public static final Item ingot_am242 = new ItemCustomLore("ingot_am242").setCreativeTab(MainRegistry.partsTab);
     public static final Item ingot_am_mix = new ItemCustomLore("ingot_am_mix").setCreativeTab(MainRegistry.partsTab);
-    public static final Item ingot_schraranium = new ItemCustomLore("ingot_schraranium").setCreativeTab(MainRegistry.partsTab);
+    public static final Item ingot_schraranium = new ItemSchraranium("ingot_schraranium").setCreativeTab(MainRegistry.partsTab);
     public static final Item ingot_schrabidium = new ItemCustomLore("ingot_schrabidium").setCreativeTab(MainRegistry.partsTab);
     public static final Item ingot_schrabidate = new ItemCustomLore("ingot_schrabidate").setCreativeTab(MainRegistry.partsTab);
     public static final Item ingot_solinium = new ItemCustomLore("ingot_solinium").setCreativeTab(MainRegistry.partsTab);
