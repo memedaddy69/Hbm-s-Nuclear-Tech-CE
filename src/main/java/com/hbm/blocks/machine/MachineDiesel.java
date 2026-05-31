@@ -99,7 +99,7 @@ public class MachineDiesel extends BlockMachineBase implements ITooltipProvider 
 
             if (efficiency != null) {
                 int eff = (int) (efficiency * 100);
-                list.add(ChatFormatting.YELLOW + "-" + grade.getGrade() + ": " + ChatFormatting.RED + eff + "%");
+                list.add(ChatFormatting.YELLOW + "-" + I18n.format(grade.getGrade()) + ": " + ChatFormatting.RED + eff + "%");
             }
         }
 

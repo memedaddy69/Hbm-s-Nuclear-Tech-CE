@@ -481,8 +481,8 @@ public final class StaticTesrBakedModels {
         float[] radioboxYaws = yawMap()
                 .meta(4, 0).meta(5, 0)
                 .meta(6, 180).meta(7, 180)
-                .meta(8, 270).meta(9, 270)
-                .meta(10, 90).meta(11, 90)
+                .meta(8, 90).meta(9, 90)
+                .meta(10, 270).meta(11, 270)
                 .build();
         StaticModelRendererBakedModel radioboxModel = new StaticModelRendererBakedModel(
                 meta -> {
