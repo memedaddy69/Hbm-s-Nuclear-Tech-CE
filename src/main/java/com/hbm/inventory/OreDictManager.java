@@ -752,6 +752,7 @@ public class OreDictManager {
         OreDictionary.registerOre("blockGlassBlack", glass_ash);
 
 		OreDictionary.registerOre("container1000lubricant", bdcl);
+        OreDictionary.registerOre("container1000water", Items.WATER_BUCKET);
         OreDictionary.registerOre("itemSilicon", billet_silicon);
 
 		for(NTMMaterial mat : Mats.orderedList) {

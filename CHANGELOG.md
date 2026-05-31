@@ -59,6 +59,7 @@
 - Fluid barrels, fluid tanks, UF6 and PuF6 tanks, the Orbus tank and the Big Ass Tank 9000 now emit a redstone comparator signal based on how full they are, letting you wire them into redstone automation (PR #1408 by Hacker6329)
 - Mining Helmets can now be found in abandoned mineshaft and spawn bonus chests, and Cracked Keys in abandoned mineshaft and dungeon chests
 - Added a config option to make doors require a continuous redstone signal to stay open, instead of toggling open or closed on each redstone pulse
+- Added container1000water ore dictionary to water bucket
 ### Performance
 ### Misc
 - Added a new developer bobblehead
