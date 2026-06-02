@@ -115,6 +115,12 @@ public class Spotlight extends Block implements ISpotlight, INBTBlockTransformab
         return EnumBlockRenderType.MODEL;
     }
 
+    @Override
+    @SideOnly(Side.CLIENT)
+    public @NotNull BlockRenderLayer getRenderLayer() {
+        return BlockRenderLayer.CUTOUT;
+    }
+
     public String getModel() {
         return switch (type) {
             case FLUORESCENT -> "fluorescent_lamp";
