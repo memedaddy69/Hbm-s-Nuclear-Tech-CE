@@ -78,7 +78,6 @@ public class CompatibilityConfig {
 	public static HashMap<Integer, Integer> dudStructure;
 	public static HashMap<Integer, Integer> spaceshipStructure;
 	public static HashMap<Integer, Integer> barrelStructure;
-	public static HashMap<Integer, Integer> geyserWater;
 	public static HashMap<Integer, Integer> geyserChlorine;
 	public static HashMap<Integer, Integer> geyserVapor;
 	public static HashMap<Integer, Integer> geyserNether;
@@ -257,7 +256,6 @@ public class CompatibilityConfig {
 		radfreq = CommonConfig.createConfigHashMap(config, CommonConfig.CATEGORY_STRUCTURES, "03.17_radHotsoptSpawn", "Spawn big radiation hotspot on every nTH chunk - <dimID:n> (Int:Int)", Integer.class, Integer.class, new String[]{ "0:5000" }, ":");
 		vaultfreq = CommonConfig.createConfigHashMap(config, CommonConfig.CATEGORY_STRUCTURES, "03.18_vaultSpawn", "Spawn locked safe on every nTH chunk - <dimID:n> (Int:Int)", Integer.class, Integer.class, new String[]{ "0:2500" }, ":");
 		
-		geyserWater = CommonConfig.createConfigHashMap(config, CommonConfig.CATEGORY_STRUCTURES, "03.19_geyserWaterSpawn", "Spawn water geyser on every nTH chunk - <dimID:n> (Int:Int)", Integer.class, Integer.class, new String[]{ "0:3000" }, ":");
 		geyserChlorine = CommonConfig.createConfigHashMap(config, CommonConfig.CATEGORY_STRUCTURES, "03.20_geyserChlorineSpawn", "Spawn poison geyser on every nTH chunk - <dimID:n> (Int:Int)", Integer.class, Integer.class, new String[]{ "0:3000" }, ":");
 		geyserVapor = CommonConfig.createConfigHashMap(config, CommonConfig.CATEGORY_STRUCTURES, "03.21_geyserVaporSpawn", "Spawn vapor geyser on every nTH chunk - <dimID:n> (Int:Int)", Integer.class, Integer.class, new String[]{ "0:500" }, ":");
 		geyserNether = CommonConfig.createConfigHashMap(config, CommonConfig.CATEGORY_STRUCTURES, "03.22_geyserNetherSpawn", "Spawn nether geyser on every nTH chunk - <dimID:n> (Int:Int)", Integer.class, Integer.class, new String[]{ "-1:2" }, ":");

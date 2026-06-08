@@ -612,9 +612,7 @@ public class ModBlocks {
     public static final Block sellafield = new BlockSellafield(Material.ROCK, SoundType.STONE, "sellafield").setHardness(5.0F).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
 
 
-    public static final Block geysir_water = new BlockGeysir(Material.ROCK, "geysir_water").setSoundType(SoundType.STONE).setHardness(5.0F).setCreativeTab(MainRegistry.resourceTab);
     public static final Block geysir_chlorine = new BlockGeysir(Material.ROCK, "geysir_chlorine").setSoundType(SoundType.STONE).setHardness(5.0F).setCreativeTab(MainRegistry.resourceTab);
-    public static final Block geysir_vapor = new BlockGeysir(Material.ROCK, "geysir_vapor").setSoundType(SoundType.STONE).setHardness(5.0F).setCreativeTab(MainRegistry.resourceTab);
     public static final Block geysir_nether = new BlockGeysir(Material.ROCK, "geysir_nether").setSoundType(SoundType.STONE).setLightLevel(1.0F).setHardness(2.0F).setCreativeTab(MainRegistry.resourceTab);
 
     public static final Block block_yellowcake = new BlockHazardFalling(SoundType.SAND, "block_yellowcake", HazardRegistry.yc * HazardRegistry.block).setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(300.0F);
@@ -1097,6 +1095,7 @@ public class ModBlocks {
     public static final Block machine_silex = new MachineSILEX(Material.IRON, "machine_silex").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 
     public static final Block machine_rotary_furnace = new MachineRotaryFurnace(Material.IRON, "machine_rotary_furnace").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+    public static final Block machine_blast_furnace = new com.hbm.blocks.machine.MachineBlastFurnace(Material.ROCK, "machine_blast_furnace").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 
     public static Block machine_fel = new MachineFEL(Material.IRON, "machine_fel").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 
@@ -1510,6 +1509,7 @@ public class ModBlocks {
     public static final Block wand_tandem = new BlockWandTandem("wand_tandem");
 
     public static final Block logic_block = new LogicBlock("logic_block");
+    public static final Block logic_block_invis = new LogicBlockInvis("logic_block_invis");
 
     public static final Block toxic_block = new ToxicBlock(ModFluids.toxic_fluid, fluidtoxic, "toxic_block").setResistance(500F);
     public static final Block mud_block = new MudBlock(ModFluids.mud_fluid, fluidmud, ModDamageSource.mudPoisoning, "mud_block").setResistance(500F);

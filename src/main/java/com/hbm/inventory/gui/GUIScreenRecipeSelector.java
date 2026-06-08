@@ -3,6 +3,7 @@ package com.hbm.inventory.gui;
 import com.hbm.Tags;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.IControlReceiver;
+import com.hbm.inventory.gui.element.GUIElements;
 import com.hbm.inventory.recipes.loader.GenericRecipe;
 import com.hbm.inventory.recipes.loader.GenericRecipes;
 import com.hbm.packet.toserver.NBTControlPacket;
@@ -133,7 +134,7 @@ public class GUIScreenRecipeSelector extends GuiScreen {
 
                 if(guiLeft + ix <= mouseX && guiLeft + ix + 18 > mouseX && guiTop + iy < mouseY && guiTop + iy + 18 >= mouseY) {
                     GenericRecipe recipe = recipes.get(i);
-                    this.drawHoveringText(recipe.print(), mouseX, mouseY); // Th3_Sl1ze: I don't think pos should be fixed rly
+                    GUIElements.drawHoveringTextRecipe(recipe.print(), mouseX, mouseY, this.fontRenderer, itemRender, this.width, this.height);
                 }
             }
         }
@@ -141,7 +142,7 @@ public class GUIScreenRecipeSelector extends GuiScreen {
         if(guiLeft + 151 <= mouseX && guiLeft + 151 + 18 > mouseX && guiTop + 71 < mouseY && guiTop + 71 + 18 >= mouseY) {
             if(this.selection != null && this.recipeSet.recipeNameMap.containsKey(selection)) {
                 GenericRecipe recipe = (GenericRecipe) this.recipeSet.recipeNameMap.get(selection);
-                this.drawHoveringText(recipe.print(), mouseX, mouseY);
+                GUIElements.drawHoveringTextRecipe(recipe.print(), mouseX, mouseY, this.fontRenderer, itemRender, this.width, this.height);
             }
         }
 

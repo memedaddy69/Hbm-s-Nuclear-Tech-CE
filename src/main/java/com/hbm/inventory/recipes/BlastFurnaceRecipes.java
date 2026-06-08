@@ -26,6 +26,7 @@ import java.util.*;
 
 import static com.hbm.inventory.OreDictManager.*;
 
+@Deprecated
 public class BlastFurnaceRecipes extends SerializableRecipe {
 
     public static final ArrayList<Tuple.Triplet<Object, Object, ItemStack>> blastFurnaceRecipes = new ArrayList<>();
@@ -303,7 +304,7 @@ public class BlastFurnaceRecipes extends SerializableRecipe {
 
     @Override
     public String getFileName() {
-        return "hbmBlastFurnace.json";
+        return "hbmBlastFurnaceLegacy.json";
     }
 
     @Override

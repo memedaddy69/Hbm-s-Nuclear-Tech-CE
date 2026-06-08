@@ -67,8 +67,11 @@ public class WeaponRecipes {
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.gun_maresleg_akimbo, 1), "SMS", 'S', ModItems.gun_maresleg, 'M', WEAPONSTEEL.mechanism() );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.gun_flaregun, 1), "BRM", "  G", 'B', STEEL.heavyBarrel(), 'R', STEEL.lightReceiver(), 'M', GUNMETAL.mechanism(), 'G', STEEL.grip() );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.gun_am180, 1), "BBR", "GMS", 'B', DURA.lightBarrel(), 'R', DURA.lightReceiver(), 'M', GUNMETAL.mechanism(), 'G', WOOD.grip(), 'S', WOOD.stock() );
+        CraftingManager.addRecipeAuto(new ItemStack(ModItems.gun_star_f, 1), "BRM", "  G", 'B', WEAPONSTEEL.lightBarrel(), 'R', WEAPONSTEEL.lightReceiver(), 'M', WEAPONSTEEL.mechanism(), 'G', ANY_PLASTIC.grip() );
+        CraftingManager.addRecipeAuto(new ItemStack(ModItems.gun_star_f_akimbo, 1), "UMU", 'U', ModItems.gun_star_f, 'M', BIGMT.mechanism() );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.gun_liberator, 1), "BB ", "BBM", "G G", 'B', DURA.lightBarrel(), 'M', GUNMETAL.mechanism(), 'G', WOOD.grip() );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.gun_congolake, 1), "BM ", "BRS", "G  ", 'B', DURA.heavyBarrel(), 'M', GUNMETAL.mechanism(), 'R', DURA.lightReceiver(), 'S', WOOD.stock(), 'G', WOOD.grip() );
+        CraftingManager.addRecipeAuto(new ItemStack(ModItems.gun_mk108, 1), " GG", "BRM", " D ", 'G', ANY_PLASTIC.grip(), 'B', WEAPONSTEEL.heavyBarrel(), 'R', WEAPONSTEEL.heavyReceiver(), 'M', WEAPONSTEEL.mechanism(), 'D', WEAPONSTEEL.shell() );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.gun_flamer, 1), " MG", "BBR", " GM", 'M', GUNMETAL.mechanism(), 'G', DURA.grip(), 'B', DURA.heavyBarrel(), 'R', DURA.heavyReceiver() );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.gun_flamer_topaz, 1), " M ", "MFM", " M ", 'M', WEAPONSTEEL.mechanism(), 'F', ModItems.gun_flamer );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.gun_heavy_revolver, 1), "BRM", "  G", 'B', DESH.lightBarrel(), 'R', DESH.lightReceiver(), 'M', GUNMETAL.mechanism(), 'G', WOOD.grip() );
@@ -289,8 +292,8 @@ public class WeaponRecipes {
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.grenade_filling, 4, EnumGrenadeFilling.PLASMA.ordinal()),        " C ", "KWK", 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.CAPACITOR_BOARD), 'K', ItemCell.getFullCell(Fluids.TRITIUM), 'W', WEAPONSTEEL.plate() );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.grenade_filling, 4, EnumGrenadeFilling.LASER.ordinal()),         " C ", "KWK", 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.ATOMIC_CLOCK), 'K', ModItems.crystal_redstone, 'W', WEAPONSTEEL.plate() );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.grenade_filling, 1, EnumGrenadeFilling.NUCLEAR.ordinal()),       " T ", "CPC", " T ", 'T', ModItems.ball_tatb, 'C', WEAPONSTEEL.plate(), 'P', PU239.nugget() );
-        CraftingManager.addRecipeAuto(new ItemStack(ModItems.grenade_filling, 1, EnumGrenadeFilling.NUCLEAR_DEMO.ordinal()),  "TPT", "CPC", "TPT", 'T', ModItems.ball_tatb, 'C', WEAPONSTEEL.plate(), 'P', PU239.nugget() );
-        CraftingManager.addRecipeAuto(new ItemStack(ModItems.grenade_filling, 1, EnumGrenadeFilling.SCHRAB.ordinal()),        "BCB", "TST", "BCB", 'B', ANY_BISMOIDBRONZE.plateCast(), 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.CONTROLLER), 'T', ModItems.ball_tatb, 'S', ItemCell.getFullCell(Fluids.SAS3) );
+        CraftingManager.addRecipeAuto(new ItemStack(ModItems.grenade_filling, 1, EnumGrenadeFilling.NUCLEAR_DEMO.ordinal()),  "TPT", "CPC", "TPT", 'T', ModItems.ball_tatb, 'C', ModItems.neutron_reflector, 'P', PU239.nugget() );
+        CraftingManager.addRecipeAuto(new ItemStack(ModItems.grenade_filling, 1, EnumGrenadeFilling.SCHRAB.ordinal()),        "BCB", "TST", "BCB", 'B', CMB.plateCast(), 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.CONTROLLER), 'T', ModItems.ball_tatb, 'S', ItemCell.getFullCell(Fluids.SAS3) );
 
         // Extras
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.grenade_extra, 1, EnumGrenadeExtra.GLUE.ordinal()),        " P ", "PSP", " P ", 'P', Items.PAPER, 'S', Items.SLIME_BALL );

@@ -91,6 +91,7 @@ public class JEIConfig implements IModPlugin {
     public static final String REFINERY = "hbm.refinery";
     public static final String REFORMING = "hbm.reforming";
     public static final String ROTARY_FURNACE = "hbm.rotary_furnace";
+    public static final String BLAST_FURNACE = "hbm.blast_furnace_nt";
     public static final String SAWMILL = "hbm.sawmill";
     public static final String SHREDDER = "hbm.shredder";
     public static final String SILEX = "hbm.silex";
@@ -149,6 +150,7 @@ public class JEIConfig implements IModPlugin {
     private RBMKOutgasserRecipeHandler outgasserHandler;
     private ReformingHandler reformingHandler;
     private RotaryFurnaceRecipeHandler rotaryFurnaceRecipeHandler;
+    private BlastFurnaceHandler blastFurnaceHandler;
     private RTGRecipeHandler rtgRecipeHandler;
     private SolderingStationRecipeHandler solderingStationHandler;
     private SolidificationHandler solidificationHandler;
@@ -229,6 +231,7 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_arc_welder), ARC_WELDER);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_annihilator), ANNIHILATING);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_rotary_furnace), ROTARY_FURNACE);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_blast_furnace), BLAST_FURNACE);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_precass), PREC_ASS);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_pyrooven), PYROLYSIS);
         //This recipe catalyst doesn't work, since the book of is blacklisted.
@@ -300,6 +303,7 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipes(solderingStationHandler.getRecipes(), SOLDERING_STATION);
         registry.addRecipes(arcWelderRecipeHandler.getRecipes(), ARC_WELDER);
         registry.addRecipes(rotaryFurnaceRecipeHandler.getRecipes(), ROTARY_FURNACE);
+        registry.addRecipes(blastFurnaceHandler.getRecipes(), BLAST_FURNACE);
         registry.addRecipes(electrolyserFluidHandler.getRecipes(), ELECTROLYSIS_FLUID);
         registry.addRecipes(electrolyserMetalHandler.getRecipes(), ELECTROLYSIS_METAL);
         registry.addRecipes(rtgRecipeHandler.getRecipes(), RTG);
@@ -379,6 +383,7 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipeClickArea(GUIMachineRTG.class, 134, 22, 16, 52, RTG);
         registry.addRecipeClickArea(GUIMachineArcWelder.class, 72, 38, 32, 13, ARC_WELDER);
         registry.addRecipeClickArea(GUIMachineRotaryFurnace.class, 63, 31, 32, 9, ROTARY_FURNACE);
+        registry.addRecipeClickArea(GUIBlastFurnace.class, 62, 18, 56, 88, BLAST_FURNACE);
         registry.addRecipeClickArea(GUIElectrolyserFluid.class, 62, 26, 12, 40, ELECTROLYSIS_FLUID);
         registry.addRecipeClickArea(GUIElectrolyserMetal.class, 7, 46, 22, 25, ELECTROLYSIS_METAL);
         registry.addRecipeClickArea(GUIPyroOven.class, 57, 48, 27, 11, PYROLYSIS);
@@ -425,6 +430,7 @@ public class JEIConfig implements IModPlugin {
         HbmTransferInfo.register(t, ContainerPyroOven.class,                PYROLYSIS,          new int[]{1},                 range(6, 36));
         HbmTransferInfo.register(t, ContainerRBMKOutgasser.class,           RBMKOUTGASSER,      new int[]{0},                 range(2, 36));
         HbmTransferInfo.register(t, ContainerMachineRotaryFurnace.class,    ROTARY_FURNACE,     range(0, 3),  range(5, 36));
+        HbmTransferInfo.register(t, ContainerBlastFurnace.class,            BLAST_FURNACE,      range(1, 2),  range(5, 36));
         HbmTransferInfo.register(t, ContainerMachineRTG.class,              RTG,                range(0, 15), range(15, 36));
         HbmTransferInfo.register(t, ContainerRtgFurnace.class,              RTG,                range(1, 3),  range(5, 36));
         HbmTransferInfo.register(t, ContainerMachineShredder.class,         SHREDDER,           new int[]{0},                 range(30, 36));
@@ -535,6 +541,7 @@ public class JEIConfig implements IModPlugin {
                 pyroHandler = new PyroHandler(help),
                 reformingHandler = new ReformingHandler(help),
                 rotaryFurnaceRecipeHandler = new RotaryFurnaceRecipeHandler(help),
+                blastFurnaceHandler = new BlastFurnaceHandler(help),
                 solderingStationHandler = new SolderingStationRecipeHandler(help),
                 solidificationHandler = new SolidificationHandler(help),
                 oreSlopperHandler = new OreSlopperHandler(help),

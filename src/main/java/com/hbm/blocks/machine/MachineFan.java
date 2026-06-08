@@ -110,6 +110,7 @@ public class MachineFan extends BlockContainerBakeable implements IToolable, ITo
         public float spin;
         public float prevSpin;
         public boolean falloff = true;
+        public boolean suck = false;
         private boolean isIndirectlyPowered;
 
         @Override
@@ -167,6 +168,7 @@ public class MachineFan extends BlockContainerBakeable implements IToolable, ITo
                         double dist = e.getDistance(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
                         coeff *= 1.5 * (1 - dist / range / 2);
                     }
+                    if (suck) coeff *= -1;
 
                     e.motionX += dir.getXOffset() * coeff;
                     e.motionY += dir.getYOffset() * coeff;
@@ -174,7 +176,7 @@ public class MachineFan extends BlockContainerBakeable implements IToolable, ITo
                 }
 
                 if (world.isRemote && world.rand.nextInt(30) == 0) {
-                    double speed = 0.2;
+                    double speed = suck ? -0.2 : 0.2;
                     world.spawnParticle(EnumParticleTypes.CLOUD,
                             pos.getX() + 0.5 + dir.getXOffset() * 0.5,
                             pos.getY() + 0.5 + dir.getYOffset() * 0.5,
@@ -207,23 +209,27 @@ public class MachineFan extends BlockContainerBakeable implements IToolable, ITo
         public void readFromNBT(NBTTagCompound nbt) {
             super.readFromNBT(nbt);
             this.falloff = nbt.getBoolean("falloff");
+            this.suck = nbt.getBoolean("suck");
         }
 
         @Override
         public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
             super.writeToNBT(nbt);
             nbt.setBoolean("falloff", falloff);
+            nbt.setBoolean("suck", suck);
             return nbt;
         }
 
         @Override
         public void serialize(ByteBuf buf) {
             buf.writeBoolean(falloff);
+            buf.writeBoolean(suck);
         }
 
         @Override
         public void deserialize(ByteBuf buf) {
             falloff = buf.readBoolean();
+            suck = buf.readBoolean();
         }
     }
 
@@ -256,6 +262,31 @@ public class MachineFan extends BlockContainerBakeable implements IToolable, ITo
                             new PlayerInformPacketLegacy(
                                     ChatBuilder.start("")
                                             .nextTranslation(this.getTranslationKey() + (tile.falloff ? ".falloffOn" : ".falloffOff"))
+                                            .color(TextFormatting.GOLD)
+                                            .flush(),
+                                    10),
+                            (EntityPlayerMP) player
+                    );
+
+                    world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.5F, 0.5F);
+                }
+            }
+
+            return true;
+        }
+
+        if (tool == ToolType.DEFUSER) {
+            TileEntity te = world.getTileEntity(pos);
+
+            if (te instanceof TileEntityFan tile) {
+                tile.suck = !tile.suck;
+                tile.markDirty();
+
+                if (!world.isRemote) {
+                    PacketDispatcher.wrapper.sendTo(
+                            new PlayerInformPacketLegacy(
+                                    ChatBuilder.start("")
+                                            .nextTranslation(this.getTranslationKey() + (tile.suck ? ".suckOn" : ".suckOff"))
                                             .color(TextFormatting.GOLD)
                                             .flush(),
                                     10),

@@ -330,6 +330,8 @@ public abstract class JEIGenericRecipeHandler implements IRecipeCategory<JEIGene
             } else {
                 Gui.drawModalRectWithCustomSizedTexture(mx, 14, 59, 87, 18, 36, 256, 256);
             }
+
+            recipe.printNEIExtras();
         }
     }
 }

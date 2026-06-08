@@ -465,10 +465,10 @@ public class ModEventHandler {
                 MobUtil.equipFullSet(entity, ModItems.hazmat_helmet, ModItems.hazmat_plate, ModItems.hazmat_legs, ModItems.hazmat_boots);
                 return;
             }
-            slotPools = MobUtil.slotPoolCommon;
+            slotPools = MobUtil.slotPoolCommonS;
 
         } else if(entity instanceof EntitySkeleton) {
-            slotPools = MobUtil.slotPoolRanged;
+            slotPools = MobUtil.slotPoolRangedS;
             ItemStack bowReplacement = getSkelegun(soot, world.rand);
             slotPools.put(0, createSlotPool(50, bowReplacement != null ? new Object[][]{{bowReplacement, 1}} : new Object[][]{}));
         }

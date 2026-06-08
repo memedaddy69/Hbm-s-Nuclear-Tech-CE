@@ -68,7 +68,6 @@ public class WorldConfig {
 	public static int dudStructure = 500;
 	public static int spaceshipStructure = 1000;
 	public static int barrelStructure = 5000;
-	public static int geyserWater = 3000;
 	public static int geyserChlorine = 3000;
 	public static int geyserVapor = 500;
 	public static int capsuleStructure = 100;
@@ -164,7 +163,6 @@ public class WorldConfig {
 		eveGasSpawn = convertToInt(CompatibilityConfig.eveGasSpawn.get(0));
 		radfreq = convertToInt(CompatibilityConfig.radfreq.get(0));
 		vaultfreq = convertToInt(CompatibilityConfig.vaultfreq.get(0));
-		geyserWater = convertToInt(CompatibilityConfig.geyserWater.get(0));
 		geyserChlorine = convertToInt(CompatibilityConfig.geyserChlorine.get(0));
 
 

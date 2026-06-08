@@ -70,7 +70,7 @@ public class RBMKRod extends RBMKBase {
 	public void breakBlock(@NotNull World world, @NotNull BlockPos pos, @NotNull IBlockState state) {
 		int meta = getMetaFromState(state);
 
-		if(meta >= offset && !RBMKDials.getMeltdownsDisabled(world)) {
+		if(!world.isRemote && meta >= offset && !RBMKDials.getMeltdownsDisabled(world)) {
 			TileEntity te = world.getTileEntity(pos);
 			if(te instanceof TileEntityRBMKRod tile) {
                 if(TileEntityRBMKBase.explodeOnBroken) {

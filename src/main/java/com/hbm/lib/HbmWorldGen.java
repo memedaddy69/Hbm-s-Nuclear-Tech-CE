@@ -34,7 +34,9 @@ import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.block.BlockOldLog;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Biomes;
 import net.minecraft.init.Blocks;
+import com.hbm.world.Geyser;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -482,43 +484,14 @@ public class HbmWorldGen implements IWorldGenerator {
                 LibraryDungeon.INSTANCE.generate(world, rand, pos.setPos(x, y, z));
             }
 
-            if (biome.getRainfall() > 2F) {
-                int dimGeyserWater = parseInt(CompatibilityConfig.geyserWater.get(dimID));
-                if (dimGeyserWater > 0 && rand.nextInt(dimGeyserWater) == 0) {
-                    int x = chunkMinX + rand.nextInt(16);
-                    int z = chunkMinZ + rand.nextInt(16);
-                    int y = world.getHeight(x, z);
-
-                    pos.setPos(x, y - 1, z);
-                    if (world.getBlockState(pos).getBlock() == Blocks.GRASS) Geyser.INSTANCE.generate(world, rand, pos.setPos(x, y, z));
-                }
-            }
-
-            if (biome.getDefaultTemperature() > 1.8F && biome.getRainfall() < 1F) {
-                int dimGeyserChlorine = parseInt(CompatibilityConfig.geyserChlorine.get(dimID));
-                if (dimGeyserChlorine > 0 && rand.nextInt(dimGeyserChlorine) == 0) {
-                    int x = chunkMinX + rand.nextInt(16);
-                    int z = chunkMinZ + rand.nextInt(16);
-                    int y = world.getHeight(x, z);
-
-                    pos.setPos(x, y - 1, z);
-                    if (world.getBlockState(pos).getBlock() == Blocks.SAND) {
-                        GeyserLarge.INSTANCE.generate(world, rand, pos.setPos(x, y, z));
-                    }
-                }
-            }
-
-            // Geyser vapor – stone under air
-            int dimGeyserVapor = parseInt(CompatibilityConfig.geyserVapor.get(dimID));
-            if (dimGeyserVapor > 0 && rand.nextInt(dimGeyserVapor) == 0) {
+            int dimGeyserChlorine = parseInt(CompatibilityConfig.geyserChlorine.get(dimID));
+            if (dimGeyserChlorine > 0 && biome == Biomes.PLAINS && rand.nextInt(dimGeyserChlorine) == 0) {
                 int x = chunkMinX + rand.nextInt(16);
                 int z = chunkMinZ + rand.nextInt(16);
                 int y = world.getHeight(x, z);
 
-                BlockPos below = pos.setPos(x, y - 1, z);
-                if (world.getBlockState(below).getBlock() == Blocks.STONE) {
-                    world.setBlockState(below, ModBlocks.geysir_vapor.getDefaultState(), 2 | 16);
-                }
+                pos.setPos(x, y - 1, z);
+                if (world.getBlockState(pos).getBlock() == Blocks.GRASS) Geyser.INSTANCE.generate(world, rand, pos.setPos(x, y, z));
             }
 
             int dimGeyserNether = parseInt(CompatibilityConfig.geyserNether.get(dimID));

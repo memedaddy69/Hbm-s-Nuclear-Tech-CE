@@ -13,7 +13,6 @@ import com.hbm.inventory.container.ContainerBarrel;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
-import com.hbm.inventory.fluid.trait.FT_Corrosive;
 import com.hbm.inventory.gui.GUIBarrel;
 import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.lib.DirPos;
@@ -313,28 +312,6 @@ public class TileEntityBarrel extends TileEntityMachineBase implements ITickable
             shouldDrop = false;
             world.destroyBlock(pos, false);
             world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS, 1.0F, 1.0F);
-        }
-
-        //for when you fill corrosive liquid into an iron tank
-        if ((b == ModBlocks.barrel_iron && tankNew.getTankType().isCorrosive()) || (b == ModBlocks.barrel_steel && tankNew.getTankType().hasTrait(FT_Corrosive.class) && tankNew.getTankType().getTrait(FT_Corrosive.class).getRating() > 50)) {
-
-            world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS, 1.0F, 1.0F);
-            ItemStackHandler copy = new ItemStackHandler(this.inventory.getSlots());
-            for (int i = 0; i < this.inventory.getSlots(); i++) {
-                copy.setStackInSlot(i, this.inventory.getStackInSlot(i).copy());
-            }
-
-            this.inventory = new ItemStackHandler(6);
-            shouldDrop = false;
-            world.setBlockState(pos, ModBlocks.barrel_corroded.getDefaultState());
-
-            TileEntityBarrel barrel = (TileEntityBarrel) world.getTileEntity(pos);
-
-            if (barrel != null) {
-                barrel.tankNew.setTankType(tankNew.getTankType());
-                barrel.tankNew.setFill(Math.min(barrel.tankNew.getMaxFill(), tankNew.getFill()));
-                barrel.inventory = copy;
-            }
         }
 
         if (b == ModBlocks.barrel_corroded) {

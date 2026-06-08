@@ -52,7 +52,6 @@ public final class PhasedStructureRegistry {
         register("hbm:bunker", Bunker.INSTANCE);
         register("hbm:desert_atom_001", DesertAtom001.INSTANCE);
         register("hbm:geyser", Geyser.INSTANCE);
-        register("hbm:geyser_large", GeyserLarge.INSTANCE);
         register("hbm:glyphid_hive_infected", GlyphidHive.INFECTED);
         register("hbm:glyphid_hive_infected_noloot", GlyphidHive.INFECTED_NOLOOT);
         register("hbm:glyphid_hive_normal", GlyphidHive.NORMAL);

@@ -2,7 +2,7 @@ package com.hbm.inventory.gui;
 
 import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerMachinePress;
-import com.hbm.render.util.GaugeUtil;
+import com.hbm.inventory.gui.element.GUIElements;
 import com.hbm.tileentity.machine.TileEntityMachinePress;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
@@ -49,6 +49,6 @@ public class GUIMachinePress extends GuiInfoContainer {
 		int progress = this.press.getProgressScaled(16);
 		this.drawTexturedModalRect(guiLeft + 79, guiTop + 35, 14, 202, 18, progress);
 		double speed = (double) this.press.speed / (double) TileEntityMachinePress.maxSpeed;
-		GaugeUtil.drawSmoothGauge(guiLeft + 34, guiTop + 25, this.zLevel, speed, 5, 2, 1, 0x7f0000);
+		GUIElements.drawSmoothGauge(guiLeft + 34, guiTop + 25, this.zLevel, speed, 5, 2, 1, 0x7f0000);
 	}
 }

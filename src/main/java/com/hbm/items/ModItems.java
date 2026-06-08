@@ -1883,6 +1883,7 @@ public class ModItems {
     public static Item gun_am180;
     public static Item gun_liberator;
     public static Item gun_congolake;
+    public static Item gun_mk108;
     public static Item gun_flamer;
     public static Item gun_flamer_topaz;
     public static Item gun_flamer_daybreaker;
@@ -1890,6 +1891,8 @@ public class ModItems {
     public static Item gun_uzi_akimbo;
     public static Item gun_spas12;
     public static Item gun_panzerschreck;
+    public static Item gun_star_f;
+    public static Item gun_star_f_akimbo;
     public static Item gun_g3;
     public static Item gun_g3_zebra;
     public static Item gun_stinger;

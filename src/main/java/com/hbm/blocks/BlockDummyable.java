@@ -469,6 +469,9 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
 		return this.getDefaultState().withProperty(META, meta);
 	}
 	
+	/**
+	 * @returns an int array with six fields, describing the amount of dummy blocks in each direction around the core. order is UP, DOWN, FORWARD, BACKWARD, LEFT, RIGHT
+	 */
 	public abstract int[] getDimensions();
 
 	public abstract int getOffset();

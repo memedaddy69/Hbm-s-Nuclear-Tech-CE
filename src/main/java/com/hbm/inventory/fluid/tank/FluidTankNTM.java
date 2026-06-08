@@ -2,6 +2,7 @@ package com.hbm.inventory.fluid.tank;
 
 import com.hbm.capability.NTMFluidCapabilityHandler;
 import com.hbm.inventory.fluid.FluidType;
+import com.hbm.inventory.gui.element.GUIElements;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.gui.GuiInfoContainer;
 import com.hbm.items.ModItems;
@@ -314,7 +315,7 @@ public class FluidTankNTM implements IFluidHandler, IFluidTank, Cloneable {
             }
 
             type.addInfo(list);
-            gui.drawFluidInfo(list.toArray(new String[0]), mouseX, mouseY);
+            GUIElements.drawHoveringTextFluid(list, mouseX, mouseY, gui.getFontRenderer(), gui.getItemRenderer(), gui.width, gui.height, this.type);
         }
     }
 

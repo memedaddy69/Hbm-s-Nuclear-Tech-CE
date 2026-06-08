@@ -1,6 +1,7 @@
 package com.hbm.inventory.gui;
 
 import com.hbm.Tags;
+import com.hbm.inventory.gui.element.GUIElements;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemMachineUpgrade.UpgradeType;
 import com.hbm.lib.Library;
@@ -12,6 +13,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -34,6 +36,19 @@ public abstract class GuiInfoContainer extends GuiContainer {
 
   public void drawFluidInfo(String[] text, int x, int y) {
     this.drawHoveringText(Arrays.asList(text), x, y);
+  }
+
+  @Override
+  public void drawHoveringText(List<String> list, int x, int y) {
+    GUIElements.drawHoveringText(list, x, y, fontRenderer, itemRender, width, height);
+  }
+
+  public RenderItem getItemRenderer() {
+    return this.itemRender;
+  }
+
+  public FontRenderer getFontRenderer() {
+    return this.fontRenderer;
   }
 
   public void drawFluidInfo(List<String> text, int x, int y) {

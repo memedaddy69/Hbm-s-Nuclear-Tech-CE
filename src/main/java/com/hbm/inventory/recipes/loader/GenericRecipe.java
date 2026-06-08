@@ -11,6 +11,8 @@ import com.hbm.items.machine.ItemFluidIcon;
 import com.hbm.util.BobMathUtil;
 import com.hbm.util.I18nUtil;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
@@ -124,6 +126,17 @@ public class GenericRecipe {
         if(name == null) name = this.getIcon().getDisplayName();
         if(this.nameWrapper != null) name = I18nUtil.resolveKey(this.nameWrapper, name);
         return name;
+    }
+
+    public void printNEIExtras() {
+
+        FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
+        String duration = BobMathUtil.getShortNumber(this.duration) + " ticks";
+        String consumption = BobMathUtil.getShortNumber(this.power) + "HE/t";
+
+        int side = 164;
+        fontRenderer.drawString(duration, side - fontRenderer.getStringWidth(duration), 45, 0x404040);
+        fontRenderer.drawString(consumption, side - fontRenderer.getStringWidth(consumption), 57, 0x404040);
     }
 
     public List<String> print() {

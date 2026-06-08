@@ -296,8 +296,6 @@ public class ParseMSES1 implements IParse {
 
             // listens to an RoR signal using the supplied channel name and saves it to the buffer
             case "listen" -> {
-                if (ctx.buffer.isEmpty())
-                    return new ReturnInfo(EnumStatementReturn.UNDEFINED, index, "Cannot listen, buffer is empty");
                 RTTYSystem.RTTYChannel chan = RTTYSystem.listen(ctx.world, substitute(ctx, args));
                 if (chan != null) ctx.buffer = chan.signal + "";
                 return new ReturnInfo(EnumStatementReturn.OK, index);

@@ -57,7 +57,7 @@ public class RenderVendingMachine extends TileEntitySpecialRenderer<BlockVending
             @Override
             public void renderCommon(ItemStack stack) {
                 bindTexture(ResourceManager.vending_machine_tex);
-                ResourceManager.vending_machine.renderPart(stack.getItemDamage() % 2 == 0 ? "Obamna" : "Soda");
+                ResourceManager.vending_machine.renderPart(stack.getItemDamage() % 2 == 0 ? "Soda" : "Obamna");
             }
         };
     }

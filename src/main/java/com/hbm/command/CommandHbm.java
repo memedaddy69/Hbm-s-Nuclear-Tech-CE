@@ -59,7 +59,7 @@ public class CommandHbm extends CommandBase {
 			if ("subcommands".equals(args[0])) {
 				return Lists.newArrayList("gen", "tom").stream().filter(s -> s.startsWith(args[1])).collect(Collectors.toList());
 			} else if ("gen".equals(args[0])) {
-				return Lists.newArrayList("antenna", "relay", "dud", "silo", "factory", "barrel", "vertibird", "vertibird_crashed", "satellite", "spaceship", "sellafield", "radio", "bunker", "desert_atom", "library", "geysir_water", "geysir_vapor", "geysir_chlorine").stream().filter(s -> s.startsWith(args[1])).collect(Collectors.toList());
+				return Lists.newArrayList("antenna", "relay", "dud", "silo", "factory", "barrel", "vertibird", "vertibird_crashed", "satellite", "spaceship", "sellafield", "radio", "bunker", "desert_atom", "library", "geysir_chlorine").stream().filter(s -> s.startsWith(args[1])).collect(Collectors.toList());
 			} else if ("tom".equals(args[0])) {
 				return Lists.newArrayList("reset").stream().filter(s -> s.startsWith(args[1])).collect(Collectors.toList());
 			}
@@ -275,7 +275,7 @@ public class CommandHbm extends CommandBase {
 				builder.append("Info for command: gen\n\n");
 				builder.append("Generates a structure at the block under your current position. Generation can be forced.\n\n");
 				builder.append("Available structures:\n\n");
-				builder.append("antenna      relay\ndud           silo\nfactory      barrel\nvertibird     vertibird_crashed\nsatellite      spaceship\nsellafield     radio\nbunker       desert_atom\nlibrary      geysir_water\ngeysir_vapor      geysir_chlorine");
+				builder.append("antenna      relay\ndud           silo\nfactory      barrel\nvertibird     vertibird_crashed\nsatellite      spaceship\nsellafield     radio\nbunker       desert_atom\nlibrary      geysir_chlorine");
 				sender.sendMessage(new TextComponentTranslation(builder.toString()));
 			} else if ("tom".equals(args[1])) {
 				StringBuilder builder = new StringBuilder();
@@ -320,22 +320,6 @@ public class CommandHbm extends CommandBase {
                 case "bunker" -> Bunker.INSTANCE.generate(world, rand, genPos, force);
                 case "desert_atom" -> DesertAtom001.INSTANCE.generate(world, rand, genPos, force);
                 case "library" -> LibraryDungeon.INSTANCE.generate(world, rand, genPos, force);
-                case "geysir_water" -> {
-                    if (force) {
-                        GeyserLarge.INSTANCE.generate(world, rand, genPos);
-                    } else {
-                        if (world.getBlockState(genPos.down()).getBlock() == Blocks.SAND)
-                            GeyserLarge.INSTANCE.generate(world, rand, genPos);
-                    }
-                }
-                case "geysir_vapor" -> {
-                    if (force) {
-                        world.setBlockState(genPos.down(), ModBlocks.geysir_vapor.getDefaultState());
-                    } else {
-                        if (world.getBlockState(genPos.down()).getBlock() == Blocks.STONE)
-                            world.setBlockState(genPos.down(), ModBlocks.geysir_vapor.getDefaultState());
-                    }
-                }
                 case "geysir_chlorine" -> {
                     if (force) {
                         Geyser.INSTANCE.generate(world, rand, genPos);

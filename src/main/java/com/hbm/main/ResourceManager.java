@@ -164,10 +164,12 @@ public class ResourceManager {
     public static final WaveFrontObjectVAO am180 = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/weapons/am180.obj")).asVBO();
     public static final WaveFrontObjectVAO liberator = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/weapons/liberator.obj")).asVBO();
     public static final WaveFrontObjectVAO congolake = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/weapons/congolake.obj")).asVBO();
+    public static final WaveFrontObjectVAO mk108 = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/weapons/mk108.obj")).asVBO();
     public static final WaveFrontObjectVAO flamethrower = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/weapons/flamethrower.obj")).asVBO();
     public static final WaveFrontObjectVAO lilmac = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/weapons/lilmac.obj")).asVBO();
     public static final WaveFrontObjectVAO carbine = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/weapons/carbine.obj")).asVBO();
     public static final WaveFrontObjectVAO uzi = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/weapons/uzi.obj")).asVBO();
+    public static final WaveFrontObjectVAO star_f = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/weapons/star_f.obj")).asVBO();
     public static final WaveFrontObjectVAO spas_12 = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/weapons/spas-12.obj")).asVBO();
     public static final WaveFrontObjectVAO panzerschreck = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/weapons/panzerschreck.obj")).asVBO();
     public static final WaveFrontObjectVAO g3 = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/weapons/g3.obj")).asVBO();
@@ -297,6 +299,8 @@ public class ResourceManager {
     public static final WaveFrontObjectVAO arrow = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/blocks/arrow.obj")).asVBO();
     //RotaryFurnace
     public static final WaveFrontObjectVAO rotary_furnace = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/machines/rotary_furnace.obj")).asVBO();
+    //BlastFurnace
+    public static final WaveFrontObjectVAO blast_furnace = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/machines/blast_furnace.obj")).asVBO();
     //Charging Station
     public static final WaveFrontObjectVAO charger = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/blocks/charger.obj")).asVBO();
     public static final WaveFrontObjectVAO refueler = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/blocks/refueler.obj")).asVBO();
@@ -639,6 +643,8 @@ public class ResourceManager {
     public static final ResourceLocation zirnox_destroyed_tex = new ResourceLocation(Tags.MODID, "textures/models/machines/zirnox_destroyed.png");
     //Rotary Furnace
     public static final ResourceLocation rotary_furnace_tex = new ResourceLocation(Tags.MODID, "textures/models/machines/rotary_furnace.png");
+    //Blast Furnace
+    public static final ResourceLocation blast_furnace_tex = new ResourceLocation(Tags.MODID, "textures/models/machines/blast_furnace.png");
     //Charger
     public static final ResourceLocation charger_tex = new ResourceLocation(Tags.MODID, "textures/models/machines/charger.png");
     public static final ResourceLocation refueler_tex = new ResourceLocation(Tags.MODID, "textures/models/machines/refueler.png");
@@ -881,6 +887,7 @@ public class ResourceManager {
     public static final ResourceLocation m2_tex = new ResourceLocation(Tags.MODID, "textures/models/weapons/m2_browning.png");
     public static final ResourceLocation coilgun_tex = new ResourceLocation(Tags.MODID, "textures/models/weapons/coilgun.png");
     public static final ResourceLocation congolake_tex = new ResourceLocation(Tags.MODID, "textures/models/weapons/congolake.png");
+    public static final ResourceLocation mk108_tex = new ResourceLocation(Tags.MODID, "textures/models/weapons/mk108.png");
     public static final ResourceLocation debug_gun_tex = new ResourceLocation(Tags.MODID, "textures/models/weapons/debug_gun.png");
     public static final ResourceLocation pepperbox_tex = new ResourceLocation(Tags.MODID, "textures/models/weapons/pepperbox.png");
     public static final ResourceLocation bio_revolver_tex = new ResourceLocation(Tags.MODID, "textures/models/weapons/bio_revolver.png");
@@ -907,6 +914,8 @@ public class ResourceManager {
     public static final ResourceLocation flamethrower_daybreaker_tex = new ResourceLocation(Tags.MODID, "textures/models/weapons/flamethrower_daybreaker.png");
     public static final ResourceLocation mike_hawk_tex = new ResourceLocation(Tags.MODID, "textures/models/weapons/lag.png");
     public static final ResourceLocation uzi_tex = new ResourceLocation(Tags.MODID, "textures/models/weapons/uzi.png");
+    public static final ResourceLocation star_f_tex = new ResourceLocation(Tags.MODID, "textures/models/weapons/star_f.png");
+    public static final ResourceLocation star_f_elite_tex = new ResourceLocation(Tags.MODID, "textures/models/weapons/star_f_elite.png");
     public static final ResourceLocation uzi_saturnite_tex = new ResourceLocation(Tags.MODID, "textures/models/weapons/uzi_saturnite.png");
     public static final ResourceLocation panzerschreck_tex = new ResourceLocation(Tags.MODID, "textures/models/weapons/panzerschreck.png");
     public static final ResourceLocation g3_tex = new ResourceLocation(Tags.MODID, "textures/models/weapons/g3.png");

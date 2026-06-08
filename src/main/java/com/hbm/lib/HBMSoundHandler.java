@@ -328,6 +328,7 @@ public final class HBMSoundHandler {
     public static SoundEvent fireSilenced;
     public static SoundEvent fireGreaseGun;
     public static SoundEvent firePistol;
+    public static SoundEvent firePistolLight;
     public static SoundEvent fireBlackPowder;
     public static SoundEvent fireUzi;
     public static SoundEvent fireAberrator;
@@ -343,6 +344,7 @@ public final class HBMSoundHandler {
     public static SoundEvent fireShotgunAuto;
     public static SoundEvent fireShotgunAlt;
     public static SoundEvent glShoot;
+    public static SoundEvent mk108Shoot;
     public static SoundEvent fireLaserGatling;
     public static SoundEvent fireRifleHeavy;
     public static SoundEvent fireAssault;
@@ -726,6 +728,7 @@ public final class HBMSoundHandler {
         motor = register("block.motor");
         fireSilenced = register("weapon.fire.silenced");
         firePistol = register("weapon.fire.pistol");
+        firePistolLight = register("weapon.fire.pistollight");
         fireBlackPowder = register("weapon.fire.blackPowder");
         fireUzi = register("weapon.fire.uzi");
         fireGreaseGun = register("weapon.fire.greaseGun");
@@ -742,6 +745,7 @@ public final class HBMSoundHandler {
         fireShotgunAuto = register("weapon.fire.shotgunAlt");
         fireShotgunAlt = register("weapon.fire.shotgunAuto");
         glShoot = register("weapon.glShoot");
+        mk108Shoot = register("weapon.fire.mk108");
         fireLaserGatling = register("weapon.fire.laserGatling");
         fireRifleHeavy = register("weapon.fire.rifleHeavy");
         fireAssault = register("weapon.fire.assault");

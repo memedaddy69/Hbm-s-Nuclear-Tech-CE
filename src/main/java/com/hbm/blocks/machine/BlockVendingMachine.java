@@ -66,9 +66,8 @@ public class BlockVendingMachine extends BlockDummyable implements IBlockMulti, 
             if (worldIn.isRemote) return true;
 
             BlockPos core = this.findCore(worldIn, pos);
+            stack.shrink(1);
             if (core != null) {
-                stack.shrink(1);
-
                 int meta = worldIn.getBlockState(core).getValue(META);
                 boolean dropSnacks = worldIn.getBlockState(core.up()).getValue(META) >= extra;
 
@@ -78,7 +77,7 @@ public class BlockVendingMachine extends BlockDummyable implements IBlockMulti, 
                 EntityItem item = new EntityItem(worldIn, pos.getX() + 0.5 + dir.offsetX * 0.75, core.getY() + 0.25, pos.getZ() + 0.5 + dir.offsetZ * 0.75, drop);
                 worldIn.spawnEntity(item);
 
-                worldIn.playSound(null, pos.add(0.5, 0.5, 0.5), HBMSoundHandler.boltOpen, SoundCategory.BLOCKS, 1f, 0.75f);
+                worldIn.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundHandler.boltOpen, SoundCategory.BLOCKS, 1f, 0.75f);
             }
 
             return true;
@@ -91,7 +90,7 @@ public class BlockVendingMachine extends BlockDummyable implements IBlockMulti, 
     public void onBlockPlacedBy(@NotNull World world, @NotNull BlockPos pos, @NotNull IBlockState state, @NotNull EntityLivingBase player, @NotNull ItemStack itemStack) {
         super.onBlockPlacedBy(world, pos, state, player, itemStack);
 
-        if (itemStack.getItemDamage() % 2 == 0 && world.getBlockState(pos.up()).getBlock() == this) {
+        if (itemStack.getItemDamage() % 2 == 1 && world.getBlockState(pos.up()).getBlock() == this) {
             this.makeExtra(world, pos.getX(), pos.getY() + 1, pos.getZ());
         }
     }
@@ -100,8 +99,8 @@ public class BlockVendingMachine extends BlockDummyable implements IBlockMulti, 
     @ParametersAreNonnullByDefault
     public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
         BlockPos core = this.findCore(world, pos);
-        int dmg = 1;
-        if (core != null && world.getBlockState(core.up()).getValue(META) >= extra) dmg = 0;
+        int dmg = 0;
+        if (core != null && world.getBlockState(core.up()).getValue(META) >= extra) dmg = 1;
         drops.add(new ItemStack(this, 1, dmg));
     }
 

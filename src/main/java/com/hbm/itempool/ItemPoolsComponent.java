@@ -44,7 +44,7 @@ public class ItemPoolsComponent {
                     weighted(ModItems.circuit, EnumCircuitType.PCB.ordinal(), 1, 3, 5),
                     weighted(ModItems.circuit, EnumCircuitType.CAPACITOR.ordinal(), 1, 1, 3),
                     weighted(ModItems.blade_titanium, 0, 1, 8, 1),
-                    weighted(ModItems.blueprint_folder, 0, 1, 1, 1)
+                    weighted(ModItems.blueprint_folder, 0, 1, 1, 1),
             };
         }};
 
