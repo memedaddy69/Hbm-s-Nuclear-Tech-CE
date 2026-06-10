@@ -6,12 +6,24 @@ import com.hbm.blocks.machine.MachineDiFurnaceExtension;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.tileentity.machine.TileEntityDiFurnace;
 import com.hbm.tileentity.machine.TileEntityHadron;
+import com.hbm.util.Compat;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import org.jetbrains.annotations.NotNull;
 
 public class TileEntityProxyBase extends TileEntityLoadedBase {
 
+	public BlockPos cachedPosition;
+
 	public TileEntity getTE() {
+
+		if(cachedPosition != null) {
+			TileEntity te = Compat.getTileStandard(world, cachedPosition.getX(), cachedPosition.getY(), cachedPosition.getZ());
+			if(te != null && !(te instanceof TileEntityProxyBase)) return te;
+			cachedPosition = null;
+			this.markDirty();
+		}
 
 		if(this.getBlockType() instanceof BlockDummyable) {
 
@@ -53,5 +65,25 @@ public class TileEntityProxyBase extends TileEntityLoadedBase {
 		}
 
 		return null;
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt) {
+		super.readFromNBT(nbt);
+
+		if(nbt.getBoolean("hasPos")) cachedPosition = new BlockPos(nbt.getInteger("pX"), nbt.getInteger("pY"), nbt.getInteger("pZ"));
+	}
+
+	@Override
+	public @NotNull NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+		super.writeToNBT(nbt);
+
+		if(this.cachedPosition != null) {
+			nbt.setBoolean("hasPos", true);
+			nbt.setInteger("pX", this.cachedPosition.getX());
+			nbt.setInteger("pY", this.cachedPosition.getY());
+			nbt.setInteger("pZ", this.cachedPosition.getZ());
+		}
+		return nbt;
 	}
 }

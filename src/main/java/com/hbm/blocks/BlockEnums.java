@@ -37,6 +37,33 @@ public class BlockEnums {
 		public static final EnumStalagmiteType[] VALUES = values();
 	}
 
+	public enum EnumCMMaterials {
+		STEEL,
+		ALLOY,
+		DESH,
+		TCALLOY;
+
+		public static final EnumCMMaterials[] VALUES = values();
+	}
+
+	public enum EnumCMEngines {
+		STANDARD,
+		DESH,
+		BISMUTH;
+
+		public static final EnumCMEngines[] VALUES = values();
+	}
+
+	public enum EnumCMCircuit {
+		ALUMINIUM,
+		COPPER,
+		RED_COPPER,
+		GOLD,
+		SCHRABIDIUM;
+
+		public static final EnumCMCircuit[] VALUES = values();
+	}
+
 	/** DECO / STRUCTURE ENUMS */
 	//i apologize in advance
 

@@ -1499,6 +1499,8 @@ public class ModEventHandler {
         System.out.println("Memory usage before: " + mem);
         CraftingManager.hack = e;
         CraftingManager.init();
+        // upstream calls this at init; CE recipe registration only works inside this event window
+        CustomMachineConfigJSON.initialize();
         // Load compatibility for OC.
         // mlbv: this would throw an Exception if called at PostInit, at that time hack would be null.
         CompatHandler.init();

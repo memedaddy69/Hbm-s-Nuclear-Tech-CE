@@ -776,6 +776,16 @@ public class ModBlocks {
     public static final Block machine_bigasstank = new MachineBigAssTank(Material.IRON, "machine_bigasstank").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
     public static final Block machine_orbus = new MachineOrbus(Material.IRON, "machine_orbus").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 
+    public static final Block cm_block = new BlockCM<>("cm_block", BlockEnums.EnumCMMaterials.VALUES).setCreativeTab(MainRegistry.machineTab).setHardness(5.0F).setResistance(10.0F);
+    public static final Block cm_sheet = new BlockCM<>("cm_sheet", BlockEnums.EnumCMMaterials.VALUES).setCreativeTab(MainRegistry.machineTab).setHardness(5.0F).setResistance(10.0F);
+    public static final Block cm_engine = new BlockCM<>("cm_engine", BlockEnums.EnumCMEngines.VALUES).setCreativeTab(MainRegistry.machineTab).setHardness(5.0F).setResistance(10.0F);
+    public static final Block cm_tank = new BlockCMGlass<>("cm_tank", BlockEnums.EnumCMMaterials.VALUES).setCreativeTab(MainRegistry.machineTab).setHardness(5.0F).setResistance(10.0F);
+    public static final Block cm_circuit = new BlockCM<>("cm_circuit", BlockEnums.EnumCMCircuit.VALUES).setCreativeTab(MainRegistry.machineTab).setHardness(5.0F).setResistance(10.0F);
+    public static final Block cm_port = new BlockCMPort<>("cm_port", BlockEnums.EnumCMMaterials.VALUES).setCreativeTab(MainRegistry.machineTab).setHardness(5.0F).setResistance(10.0F);
+    public static final Block cm_flux = new BlockBakeBase(Material.IRON, "cm_flux", "cm_flux_top", "cm_flux_side").setCreativeTab(MainRegistry.machineTab).setHardness(5.0F).setResistance(10.0F);
+    public static final Block cm_heat = new BlockBakeBase(Material.IRON, "cm_heat", "cm_heat_top", "cm_heat_side").setCreativeTab(MainRegistry.machineTab).setHardness(5.0F).setResistance(10.0F);
+    public static final Block custom_machine = new BlockCustomMachine("custom_machine").setCreativeTab(MainRegistry.machineTab).setLightLevel(1F).setHardness(5.0F).setResistance(10.0F);
+    public static final Block cm_anchor = new BlockCMAnchor("custom_machine_anchor").setCreativeTab(MainRegistry.machineTab).setHardness(5.0F).setResistance(10.0F);
 
     public static final Block machine_armor_table = new BlockArmorTable(Material.IRON, "machine_armor_table").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.consumableTab);
     public static final Block machine_weapon_table = new BlockWeaponTable("machine_weapon_table").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.consumableTab);
@@ -1095,7 +1105,7 @@ public class ModBlocks {
     public static final Block machine_silex = new MachineSILEX(Material.IRON, "machine_silex").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 
     public static final Block machine_rotary_furnace = new MachineRotaryFurnace(Material.IRON, "machine_rotary_furnace").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
-    public static final Block machine_blast_furnace = new com.hbm.blocks.machine.MachineBlastFurnace(Material.ROCK, "machine_blast_furnace").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+    public static final Block machine_blast_furnace = new MachineBlastFurnace(Material.ROCK, "machine_blast_furnace").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 
     public static Block machine_fel = new MachineFEL(Material.IRON, "machine_fel").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 

@@ -2,6 +2,7 @@ package com.hbm.handler.jei;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.ClientConfig;
+import com.hbm.config.CustomMachineConfigJSON;
 import com.hbm.config.GeneralConfig;
 import com.hbm.handler.jei.transfer.HbmTransferInfo;
 import com.hbm.inventory.FluidContainerRegistry;
@@ -162,6 +163,7 @@ public class JEIConfig implements IModPlugin {
     private VacuumRecipeHandler vacuumHandler;
     private ZirnoxRecipeHandler zirnoxHandler;
     private PUREXRecipeHandler purexHandler;
+    private final java.util.List<CustomMachineRecipeHandler> customMachineHandlers = new java.util.ArrayList<>();
     private final FluidIconRecipeRegistryPlugin fluidIconRecipeRegistryPlugin = new FluidIconRecipeRegistryPlugin();
 
     @Override
@@ -332,6 +334,15 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipes(JeiRecipes.getRadiolysisRecipes(), RADIOLYSIS);
         registry.addRecipes(combinationHandler.getRecipes(), COMBINATION);
         registry.addRecipes(purexHandler.getRecipes(), PUREX);
+
+        for (CustomMachineRecipeHandler handler : customMachineHandlers) {
+            registry.addRecipes(handler.getRecipes(), handler.getUid());
+            registry.addRecipeCatalyst(new ItemStack(ModBlocks.custom_machine, 1, 100 + CustomMachineConfigJSON.niceList.indexOf(handler.conf)), handler.getUid());
+        }
+        if (!customMachineHandlers.isEmpty()) {
+            String[] uids = customMachineHandlers.stream().map(CustomMachineRecipeHandler::getUid).toArray(String[]::new);
+            registry.addRecipeClickArea(GUIMachineCustom.class, 78, 119, 88, 16, uids);
+        }
 
         registry.addRecipeClickArea(GUIMachineCoker.class, 60, 22, 32, 18, COKER);
         registry.addRecipeClickArea(GUIMachineArcFurnaceLarge.class, 17, 36, 7, 70, ARC_FURNACE_SOLID);
@@ -567,6 +578,13 @@ public class JEIConfig implements IModPlugin {
                 new HadronRecipeHandler(help),
                 new DFCRecipeHandler(help),
                 new BookRecipeHandler(help));
+
+        customMachineHandlers.clear();
+        for (CustomMachineConfigJSON.MachineConfiguration conf : CustomMachineConfigJSON.niceList) {
+            CustomMachineRecipeHandler handler = new CustomMachineRecipeHandler(help, conf);
+            customMachineHandlers.add(handler);
+            registry.addRecipeCategories(handler);
+        }
     }
 
     private static final ISubtypeRegistry.ISubtypeInterpreter metadataFluidContainerInterpreter = stack -> {

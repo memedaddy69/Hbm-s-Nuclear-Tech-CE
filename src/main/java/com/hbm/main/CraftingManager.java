@@ -1122,8 +1122,7 @@ public class CraftingManager {
 		addShapelessAuto(new ItemStack(ModItems.sliding_blast_door_skin1, 1, 1), new ItemStack(ModItems.sliding_blast_door_skin0, 1, 0));
 		addShapelessAuto(new ItemStack(ModItems.sliding_blast_door_skin2, 1, 2), new ItemStack(ModItems.sliding_blast_door_skin1, 1, 1));
 		addShapelessAuto(new ItemStack(ModItems.sliding_blast_door_skin0), new ItemStack(ModItems.sliding_blast_door_skin2, 1, 2));
-		// TODO: custom machines?.. do we really need that?
-		/*addRecipeAuto(new ItemStack(ModBlocks.cm_block, 4, 0), " I ", "IPI", " I ", 'I', STEEL.ingot(), 'P', STEEL.plateCast());
+		addRecipeAuto(new ItemStack(ModBlocks.cm_block, 4, 0), " I ", "IPI", " I ", 'I', STEEL.ingot(), 'P', STEEL.plateCast());
 		addRecipeAuto(new ItemStack(ModBlocks.cm_block, 4, 1), " I ", "IPI", " I ", 'I', ANY_BISMOIDBRONZE.ingot(), 'P', ANY_BISMOIDBRONZE.plateCast());
 		addRecipeAuto(new ItemStack(ModBlocks.cm_block, 4, 2), " I ", "IPI", " I ", 'I', DESH.ingot(), 'P', DESH.plateCast());
 		addRecipeAuto(new ItemStack(ModBlocks.cm_block, 4, 3), " I ", "IPI", " I ", 'I', ANY_RESISTANTALLOY.ingot(), 'P', ANY_RESISTANTALLOY.plateCast());
@@ -1143,7 +1142,7 @@ public class CraftingManager {
 		addRecipeAuto(new ItemStack(ModBlocks.cm_circuit, 1, 3), " I ", "IMI", " I ", 'I', STEEL.ingot(), 'M', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.ADVANCED));
 		addRecipeAuto(new ItemStack(ModBlocks.cm_circuit, 1, 4), " I ", "IMI", " I ", 'I', STEEL.ingot(), 'M', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.BISMOID));
 		addRecipeAuto(new ItemStack(ModBlocks.cm_flux, 1, 0), "NNN", "ZCZ", "NNN", 'Z', ZR.plateCast(), 'N', ModItems.neutron_reflector, 'C', ModItems.reactor_core);
-		addRecipeAuto(new ItemStack(ModBlocks.cm_heat, 1, 0), "PCP", "PCP", "PCP", 'P', ModItems.plate_polymer, 'C', CU.ingot());*/
+		addRecipeAuto(new ItemStack(ModBlocks.cm_heat, 1, 0), "PCP", "PCP", "PCP", 'P', ModItems.plate_polymer, 'C', CU.ingot());
 
 	}
 

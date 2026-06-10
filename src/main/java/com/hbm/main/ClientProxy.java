@@ -9,8 +9,13 @@ import com.hbm.blocks.generic.BMPowerBox;
 import com.hbm.blocks.generic.BlockFissure;
 import com.hbm.blocks.generic.BlockModDoor;
 import com.hbm.blocks.generic.TrappedBrick;
+import com.hbm.blocks.generic.WasteEarth;
 import com.hbm.blocks.machine.BlockSeal;
+import com.hbm.blocks.machine.BlockSiloHatch;
+import com.hbm.blocks.machine.Floodlight;
+import com.hbm.blocks.machine.SpotlightBeam;
 import com.hbm.blocks.machine.rbmk.RBMKDebrisRadiating;
+import com.hbm.blocks.network.ConnectorRedWire;
 import com.hbm.command.CommandRadVisClient;
 import com.hbm.config.GeneralConfig;
 import com.hbm.entity.grenade.EntityDisperserCanister;
@@ -205,11 +210,11 @@ public class ClientProxy extends ServerProxy {
         ModelLoader.setCustomStateMapper(ModBlocks.volcano_core, new StateMap.Builder().ignore(BlockDummyable.META).build());
         ModelLoader.setCustomStateMapper(ModBlocks.volcano_rad_core, new StateMap.Builder().ignore(BlockDummyable.META).build());
         ModelLoader.setCustomStateMapper(ModBlocks.bm_power_box, new StateMap.Builder().ignore(BMPowerBox.FACING, BMPowerBox.IS_ON).build());
-        ModelLoader.setCustomStateMapper(ModBlocks.floodlight, new StateMap.Builder().ignore(com.hbm.blocks.machine.Floodlight.META).build());
-        ModelLoader.setCustomStateMapper(ModBlocks.spotlight_beam, new StateMap.Builder().ignore(com.hbm.blocks.machine.SpotlightBeam.META).build());
-        ModelLoader.setCustomStateMapper(ModBlocks.frozen_grass, new StateMap.Builder().ignore(com.hbm.blocks.generic.WasteEarth.META).build());
-        ModelLoader.setCustomStateMapper(ModBlocks.red_connector, new StateMap.Builder().ignore(com.hbm.blocks.network.ConnectorRedWire.FACING).build());
-        ModelLoader.setCustomStateMapper(ModBlocks.silo_hatch_drillgon, new StateMap.Builder().ignore(com.hbm.blocks.machine.BlockSiloHatch.FACING).build());
+        ModelLoader.setCustomStateMapper(ModBlocks.floodlight, new StateMap.Builder().ignore(Floodlight.META).build());
+        ModelLoader.setCustomStateMapper(ModBlocks.spotlight_beam, new StateMap.Builder().ignore(SpotlightBeam.META).build());
+        ModelLoader.setCustomStateMapper(ModBlocks.frozen_grass, new StateMap.Builder().ignore(WasteEarth.META).build());
+        ModelLoader.setCustomStateMapper(ModBlocks.red_connector, new StateMap.Builder().ignore(ConnectorRedWire.FACING).build());
+        ModelLoader.setCustomStateMapper(ModBlocks.silo_hatch_drillgon, new StateMap.Builder().ignore(BlockSiloHatch.FACING).build());
         ModelLoader.setCustomStateMapper(ModBlocks.machine_diesel, new StateMap.Builder().ignore(BlockHorizontal.FACING).build());
         ModelLoader.setCustomStateMapper(ModBlocks.turret_sentry, fixedModelStateMapper(new ModelResourceLocation(ModBlocks.machine_autosaw.getRegistryName(), "normal")));
         ModelLoader.setCustomStateMapper(ModBlocks.turret_sentry_damaged, fixedModelStateMapper(new ModelResourceLocation(ModBlocks.machine_autosaw.getRegistryName(), "normal")));
@@ -430,6 +435,11 @@ public class ClientProxy extends ServerProxy {
     @Override
     public EntityPlayer me() {
         return Minecraft.getMinecraft().player;
+    }
+
+    @Override
+    public String getLanguageCode() {
+        return Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().getLanguageCode();
     }
 
     @Override

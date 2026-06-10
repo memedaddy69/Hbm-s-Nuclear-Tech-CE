@@ -230,7 +230,7 @@ public class TileMappings {
         put(TileEntityMachineBigAssTank.class, "tileentity_bigasstank");
         put(TileEntityMachineOrbus.class, "tileentity_orbus");
 //        put(TileEntityGlpyhidSpawner.class, "tileentity_glyphid_spawner");
-//        put(TileEntityCustomMachine.class, "tileentity_custom_machine");
+        put(TileEntityCustomMachine.class, "tileentity_custom_machine");
 
         put(TileEntityLoot.class, "tileentity_ntm_loot");
         put(TileEntityPedestal.class, "tileentity_ntm_pedestal");
