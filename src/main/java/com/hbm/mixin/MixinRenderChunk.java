@@ -4,6 +4,7 @@ import com.hbm.main.client.StaticTesrBakedModels;
 import com.hbm.render.chunk.ChunkSpanningTesrHelper;
 import com.hbm.render.chunk.IExtraExtentsHolder;
 import com.hbm.render.chunk.IShadowRenderFrameStamp;
+import com.hbm.util.ChunkSpanAccumulator;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.block.state.IBlockState;
@@ -25,36 +26,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.ArrayList;
-
 @Mixin(RenderChunk.class)
 public abstract class MixinRenderChunk implements IShadowRenderFrameStamp {
 
-    /**
-     * rebuildChunk runs on background ChunkRenderWorker threads with no per-RenderChunk lock held
-     * for its body, and the same RenderChunk instance can be compiled by two workers concurrently.
-     * Keeping the per-pass extent/TESR accumulators as instance state raced (concurrent ArrayList
-     * mutation -> AIOOBE, issue #1546). Each worker thread processes one rebuildChunk at a time, so
-     * a thread-local accumulator is correctly task-scoped: reset at HEAD, accumulated during, and
-     * published into the CompiledChunk before setVisibility, all on the same thread.
-     */
-    private static final class Hbm$Accumulator {
-        int negX, posX, negY, posY, negZ, posZ;
-        final ArrayList<TileEntity> spanningTesrs = new ArrayList<>();
-
-        void reset() {
-            negX = 0;
-            posX = 0;
-            negY = 0;
-            posY = 0;
-            negZ = 0;
-            posZ = 0;
-            spanningTesrs.clear();
-        }
-    }
-
     @Unique
-    private static final ThreadLocal<Hbm$Accumulator> hbm$accumulator = ThreadLocal.withInitial(Hbm$Accumulator::new);
+    private static final ThreadLocal<ChunkSpanAccumulator> hbm$accumulator = ThreadLocal.withInitial(ChunkSpanAccumulator::new);
 
     @Unique
     private int hbm$shadowFrameStamp = Integer.MIN_VALUE;
@@ -105,7 +81,7 @@ public abstract class MixinRenderChunk implements IShadowRenderFrameStamp {
                 int localY = pos.getY() - position.getY();
                 int localZ = pos.getZ() - position.getZ();
 
-                Hbm$Accumulator acc = hbm$accumulator.get();
+                ChunkSpanAccumulator acc = hbm$accumulator.get();
                 acc.negX = Math.max(acc.negX, extents[4] - localX);
                 acc.posX = Math.max(acc.posX, localX + extents[5] - 15);
                 acc.negY = Math.max(acc.negY, extents[1] - localY);
@@ -134,7 +110,7 @@ public abstract class MixinRenderChunk implements IShadowRenderFrameStamp {
         int negZ = (int) Math.ceil(Math.max(0.0D, sz - bb.minZ));
         int posZ = (int) Math.ceil(Math.max(0.0D, bb.maxZ - (sz + 16.0D)));
         if ((negX | posX | negY | posY | negZ | posZ) != 0) {
-            Hbm$Accumulator acc = hbm$accumulator.get();
+            ChunkSpanAccumulator acc = hbm$accumulator.get();
             acc.negX = Math.max(acc.negX, negX);
             acc.posX = Math.max(acc.posX, posX);
             acc.negY = Math.max(acc.negY, negY);
@@ -149,7 +125,7 @@ public abstract class MixinRenderChunk implements IShadowRenderFrameStamp {
     @WrapOperation(method = "rebuildChunk", require = 1, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/chunk/CompiledChunk;setVisibility(Lnet/minecraft/client/renderer/chunk/SetVisibility;)V"))
     private void hbm$publishOversizedExtents(CompiledChunk compiledChunk, SetVisibility visibility, Operation<Void> original) {
         IExtraExtentsHolder holder = (IExtraExtentsHolder) compiledChunk;
-        Hbm$Accumulator acc = hbm$accumulator.get();
+        ChunkSpanAccumulator acc = hbm$accumulator.get();
         holder.hbm$setOversizedModelExtents(acc.negX, acc.posX, acc.negY, acc.posY, acc.negZ, acc.posZ);
         if (!acc.spanningTesrs.isEmpty()) {
             holder.hbm$setChunkSpanningTesrs(acc.spanningTesrs.toArray(new TileEntity[0]));
