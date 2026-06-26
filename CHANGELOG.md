@@ -14,70 +14,13 @@
 > change(major API bump).  
 >   - Changes, New Features correspond to a minor bump.  
 >   - Fixes/Performance/Misc correspond to a minor or patch bump.
-> - Previous public release: 2.5.0.3
-> - Next release: at least 2.5.0.4
+> - Previous public release: 2.5.0.4
+> - Next release: at least 2.5.0.5
 
 ### Breaking Changes
-- Advanced Alloy has been retired: its ingot, plate, block, wires, coils, tools and armor can no longer be crafted or obtained, and recipes that previously required it now use steel, titanium, copper or gold instead — existing Advanced Alloy items are marked "(LEGACY)" and can no longer be crafted or repaired
-- The standalone Energy Core battery can no longer be crafted
-- The original Blast Furnace, along with its Extension and Nuclear (RTG) variants, has been replaced by the new multiblock Blast Furnace and can no longer be crafted
-- Removed the Iron, Aluminium, Lead, Cobalt and Tungsten ladders and the Iron Fluid Barrel
+- Fixed compatibility with Modern Splash 1.5.0+. Older versions of Modern Splash are no longer supported.
 ### Fixes
-- Fixed a crash that could occur when using the chainsaw
-- Fixed a rendering crash that could occur while chunks were being rebuilt
-- Fixed the Electrolyser still showing molten material in its interface after its tank had been emptied
-- The RTG's pellet slots now only accept valid radioisotope pellets instead of any item
-- Fixed adjusting a tool's ability or fluid type applying the change to the off-hand item instead of the one in your main hand
-- The first perfluoromethyl compression step now appears in JEI
-- Fixed Control Panel labels being clipped or hidden behind the panel surface
-- Gas blocks no longer play a breaking sound or spawn particles when replaced, such as by a bucket
-- Fixed the RBMK autoloader being unable to place columns onto RBMK cover slabs
-- Fixed Glyphid Hives spawning underground or on top of trees
-- Fixed the dusty filing cabinet not showing breaking particles when mined
-- Painted ducts and cables now display their connected textures correctly
-- The detonator can now trigger silo launch pads in unloaded chunks
-- The detonator no longer falsely reports a target as too far away, or miscounts linked launch pads, when it is outside render distance
-- Fixed garbled text in the electrical coil's warning message
-- Fixed an invalid crucible recipe that registered a broken item
-- Fixed the Russian translation of the gasoline recipe
-- Fixed the ammo belt on the Sexy and Heretic shotguns rendering at the wrong angle
-- Fixed the Radio Torch Sender and Receiver causing inventory desync when their interface was opened
-- Fixed radioactive lava showing a missing-model placeholder when held as an item
-- Fixed the Radio Torch Controller's info button not correctly showing the connected device's details
-- Fixed the autosaw misreading Mustard Willow growth stages, so it no longer skips harvestable plants or cuts ungrown ones
-- Fixed cage lights rendering too dark; they now correctly appear as a translucent wire cage with a bright lamp
-- Fixed powered fans blowing air in the wrong direction
-- Fixed the Radiobox rendering in the wrong orientation when facing west or east, along with a server crash it could cause
-- Fixed the Diesel Generator's fuel-grade tooltip showing internal text instead of proper fuel names
-- Fixed the industrial boiler's groan playing far too loudly, audible from a huge distance
-- Fixed crash when a mod ships immutable SpawnableList to suppress spawns in modded biomes
 ### Changes
-- Realigned which blocks nuclear explosions transmute to match upstream: coal ore once again follows vanilla diamond/emerald behavior and a few other special cases were dropped, while stone and bedrock are still converted through the fallout system
-- Fans can now be toggled between blowing and sucking by using a defuser on them, pulling entities in instead of pushing them away
-- Steel and Titanium tools and armor have been buffed with a higher harvest tier, durability and enchantability; Steel pickaxes, axes and shovels now mine blocks in an area, and the Steel sword stuns enemies
-- Desh tools are now simply named "Desh" instead of "Worker's Alloy"
-- The Blast Furnace now produces Meteorite Ingots from cobalt and meteorite powder, which Star Metal now requires
-- Circuit chips and the atomic clock are now produced in the Assembly Machine, with cheaper alternate recipes, rather than at a crafting table, and the Chemical Plant gained recipes for napalm canisters, obsidian, and turning cobblestone into gravel and sand
-- Rebalanced several recipes, including the Nuclear Detonator, the satellite base, and demolition and Schrabidium grenade fillings
-- Natural gas and sour gas now release toxic pollution when burned
-- The Chlorine geysir can now generate in Plains biomes
-- Gun-wielding mobs now aim based on their weapon's real accuracy and can fire in fixed bursts, making their fire less random
 ### New Features
-- Added container1000water ore dictionary to water bucket
-- Added the Blast Furnace, a new multiblock machine that smelts steel, red copper, firebrick, starmetal and more; it burns solid fuel and runs faster when fed Hot Air Blast (made by heating air in a boiler), giving off Flue Gas as exhaust
-- Added the Custom Machine system: define your own processing machines through a config file — setting their recipes, interface layout, power, heat, pollution and multiblock structure — with full JEI support and an example Paper Press, plus a set of custom-machine building blocks (casings, tanks, ports, motors, circuits and more)
-- Added the Vending Machine, a block that dispenses random food or drinks when used with a Vending Machine Token; soda and snack variants are both available from the Bobmazon
-- Added AUTOCAL, a programmable controller for the Redstone-over-Radio network that runs scripts you write (loaded from a text file) to send and receive RoR signals, do math, branch and loop
-- Added the Big-Ass Tank, a large multiblock fluid-storage machine
-- Added the Grenade Machinegun, a fully-automatic 40mm grenade launcher
-- Added the Target Pistol (.22 LR), along with an akimbo Target Pistols variant, a silenced form, and a 9mm conversion
-- Loot containers in generated structures can now spawn locked, with a configurable lockpicking difficulty that counterfeit keys cannot bypass
-- Added new gear loot to structure loot piles, plus two new generated structures: a modified crane and a radio repeater
-- Added a config option (off by default) that makes large machines require a proper foundation, or they will tilt over and break
 ### Performance
 ### Misc
-- Recipe-view tooltips for the PUREX, Fusion Reactor and Plasma Forge now show their processing time, power and temperature
-- HBM blocks are now excluded from Quark's stair-recrafting to avoid duplicate or unbalanced recipes
-- Added new metal-impact sound effects
-- Added CTM compat for paintable blocks
-- When Less Bullshit Mode's Full Schrab option is enabled, Schraranium Ingots now display as "Nikonium" with their own texture
