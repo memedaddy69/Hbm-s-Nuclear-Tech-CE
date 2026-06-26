@@ -7,7 +7,6 @@ import com.hbm.animloader.ColladaLoader;
 import com.hbm.config.GeneralConfig;
 import com.hbm.handler.HbmShaderManager2;
 import com.hbm.handler.HbmShaderManager2.Shader;
-import com.hbm.lib.internal.MethodHandleHelper;
 import com.hbm.main.client.NTMClientRegistry;
 import com.hbm.render.GLCompat;
 import com.hbm.render.WavefrontObjDisplayList;
@@ -16,18 +15,14 @@ import com.hbm.render.anim.sedna.BusAnimationSedna;
 import com.hbm.render.loader.HFRWavefrontObject;
 import com.hbm.render.loader.WaveFrontObjectVAO;
 import com.hbm.render.misc.LensVisibilityHandler;
-import com.hbm.util.Compat;
 import com.hbm.util.KeypadClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.SplashProgress;
-import net.minecraftforge.fml.common.Loader;
 import org.lwjgl.opengl.GL11;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodType;
 import java.util.HashMap;
 
 public class ResourceManager {
@@ -1398,10 +1393,6 @@ public class ResourceManager {
     public static final WaveFrontObjectVAO silo_hatch = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/doors/silo_hatch.obj")).asVBO();
     public static final ResourceLocation silo_hatch_large_tex = new ResourceLocation(Tags.MODID, "textures/models/doors/silo_hatch_large.png");
     public static final WaveFrontObjectVAO silo_hatch_large = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/doors/silo_hatch_large.obj")).asVBO();
-    private static final MethodHandle splashThreadGetter;
-    private static final MethodHandle splashEnabledGetter;
-    private static final MethodHandle splashPauseHandle;
-    private static final MethodHandle splashResumeHandle;
     public static WaveFrontObjectVAO soyuz = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/soyuz.obj")).asVBO();
     public static WaveFrontObjectVAO soyuz_launcher_legs = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/launch_table/soyuz_launcher_legs.obj")).asVBO();
     public static WaveFrontObjectVAO soyuz_launcher_table = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/launch_table/soyuz_launcher_table.obj")).asVBO();
@@ -1594,14 +1585,6 @@ public class ResourceManager {
         shader.uniform1i("particleData2", 4);
     });
 
-    static {
-        Class<?> splash = SplashProgress.class;
-        splashThreadGetter = MethodHandleHelper.findStaticGetter(splash, "thread", Thread.class);
-        splashEnabledGetter = MethodHandleHelper.findStaticGetter(splash, "enabled", boolean.class);
-        splashPauseHandle = MethodHandleHelper.findStatic(splash, "pause", MethodType.methodType(void.class));
-        splashResumeHandle = MethodHandleHelper.findStatic(splash, "resume", MethodType.methodType(void.class));
-    }
-
     public static void loadAnimatedModels() {
         supershotgun = ColladaLoader.load(new ResourceLocation(Tags.MODID, "models/anim/ssg_reload_mk2_2_newmodel.dae"));
         ssg_reload = ColladaLoader.loadAnim(1300, new ResourceLocation(Tags.MODID, "models/anim/ssg_reload_mk2_2_newmodel.dae"));
@@ -1642,59 +1625,16 @@ public class ResourceManager {
         Minecraft.getMinecraft().getTextureManager().bindTexture(noise_2);
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
 
-        //Drillgon discovered that it messes with GL context
-        pauseSplash();
         if (!WaveFrontObjectVAO.uploaded) {
+            //Drillgon discovered that it messes with GL context
+            //mlbv: this is valid for Modern Splash 1.5.0+
+            SplashProgress.pause();
             for (WaveFrontObjectVAO allVBO : WaveFrontObjectVAO.allVBOs) {
                 allVBO.uploadModels();
             }
             WaveFrontObjectVAO.uploaded = true;
+            SplashProgress.resume();
         }
-        resumeSplash();
         KeypadClient.load();
     }
-
-    private static void pauseSplash() {
-        if (splashNotTerminated()) {
-            try {
-                splashPauseHandle.invokeExact();
-                MainRegistry.logger.debug("[ResourceManager] successfully paused Splashscreen");
-            } catch (Throwable t) {
-                throw new RuntimeException(t);
-            }
-        }
-    }
-
-    private static void resumeSplash() {
-        if (splashNotTerminated()) {
-            try {
-                splashResumeHandle.invokeExact();
-                MainRegistry.logger.debug("[ResourceManager] successfully resumed Splashscreen");
-            } catch (Throwable t) {
-                throw new RuntimeException(t);
-            }
-        }
-    }
-
-    private static boolean splashNotTerminated() {
-        try {
-            boolean enabled = (boolean) splashEnabledGetter.invokeExact();
-            if (!enabled) {
-                MainRegistry.logger.debug("[ResourceManager] Splashscreen is currently disabled");
-                return false;
-            }
-        } catch (Throwable t) {
-            throw new RuntimeException(t);
-        }
-        Thread splashThread;
-        try {
-            splashThread = (Thread) splashThreadGetter.invokeExact();
-        } catch (Throwable t) {
-            throw new RuntimeException(t);
-        }
-        // this line is expected throw NullPointerException
-        return splashThread.getState() != Thread.State.TERMINATED;
-    }
-
-
 }
