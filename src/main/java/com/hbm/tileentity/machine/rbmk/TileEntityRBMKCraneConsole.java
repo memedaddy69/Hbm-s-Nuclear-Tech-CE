@@ -105,6 +105,9 @@ public class TileEntityRBMKCraneConsole extends TileEntityMachineBase implements
 
         lastTiltFront = tiltFront;
         lastTiltLeft = tiltLeft;
+        lastPosFront = posFront;
+        lastPosLeft = posLeft;
+        lastProgress = progress;
         if(goesDown) {
 
             if(progress > 0) {
@@ -345,10 +348,6 @@ public class TileEntityRBMKCraneConsole extends TileEntityMachineBase implements
 
     @Override
     public void deserialize(ByteBuf buf) {
-
-        lastPosFront = posFront;
-        lastPosLeft = posLeft;
-        lastProgress = progress;
 
         AxisAlignedBB prevBB = this.bb;
         this.setUpCrane = buf.readBoolean();

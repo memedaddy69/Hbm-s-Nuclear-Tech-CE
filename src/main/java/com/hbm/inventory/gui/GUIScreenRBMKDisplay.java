@@ -24,7 +24,7 @@ public class GUIScreenRBMKDisplay extends GuiScreen {
 	private static ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/machine/gui_rbmk_numitron.png");
 	public TileEntityRBMKNumitron display;
 	protected int xSize = 256;
-	protected int ySize = 114;
+	protected int ySize = 149;
 	protected int guiLeft;
 	protected int guiTop;
 
@@ -49,9 +49,9 @@ public class GUIScreenRBMKDisplay extends GuiScreen {
 		int oY = 4;
 		
 		for(int i = 0; i < 2; i++) {
-			label[i] = new GuiTextField(0, this.fontRenderer, guiLeft + 175 + oX, guiTop + 55 + oY + i * 36, 72 - oX * 2, 14);
+			label[i] = new GuiTextField(0, this.fontRenderer, guiLeft + 27 + oX, guiTop + 55 + oY + i * 54, 84 - oX * 2, 14);
 			GUIScreenRBMKKeyPad.setupTextFieldStandard(label[i], 30, display.displays[i].label);
-			rtty[i] = new GuiTextField(0, this.fontRenderer, guiLeft + 27 + oX, guiTop + 55 + oY + i * 36, 72 - oX * 2, 14);
+			rtty[i] = new GuiTextField(0, this.fontRenderer, guiLeft + 27 + oX, guiTop + 73 + oY + i * 54, 84 - oX * 2, 14);
 			GUIScreenRBMKKeyPad.setupTextFieldStandard(rtty[i], 10, display.displays[i].rtty);
 
 			active[i] = display.displays[i].active;
@@ -78,8 +78,8 @@ public class GUIScreenRBMKDisplay extends GuiScreen {
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 		
 		for(int i = 0; i < 2; i++) {
-			if(this.active[i]) drawTexturedModalRect(guiLeft + 111, guiTop + i * 36 + 54, 18, 114, 16, 16);
-			if(this.polling[i]) drawTexturedModalRect(guiLeft + 128, guiTop + i * 36 + 53, 0, 114, 18, 18);
+			if(this.active[i]) drawTexturedModalRect(guiLeft + 124, guiTop + i * 54 + 54, 18, 150, 16, 16);
+			if(this.polling[i]) drawTexturedModalRect(guiLeft + 141, guiTop + i * 54 + 53, 0, 150, 18, 18);
 		}
 		
 		for(int i = 0; i < 2; i++) {
@@ -93,13 +93,13 @@ public class GUIScreenRBMKDisplay extends GuiScreen {
 		super.mouseClicked(x, y, b);
 		
 		for(int i = 0; i < 2; i++) {
-			if(guiLeft + 111 <= x && guiLeft + 111 + 16 > x && guiTop + i * 36 + 54 < y && guiTop + i * 36 + 54 + 16 >= y) {
+			if(guiLeft + 124 <= x && guiLeft + 124 + 16 > x && guiTop + i * 54 + 54 < y && guiTop + i * 54 + 54 + 16 >= y) {
 				this.active[i] = !this.active[i];
 				mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 0.5F + (this.active[i] ? 0.25F : 0F)));
 				return;
 			}
-			
-			if(guiLeft + 128 <= x && guiLeft + 128 + 18 > x && guiTop + i * 36 + 53 < y && guiTop + i * 36 + 53 + 18 >= y) {
+
+			if(guiLeft + 141 <= x && guiLeft + 141 + 18 > x && guiTop + i * 54 + 53 < y && guiTop + i * 54 + 53 + 18 >= y) {
 				this.polling[i] = !this.polling[i];
 				mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 0.5F + (this.polling[i] ? 0.25F : 0F)));
 				return;
@@ -141,7 +141,7 @@ public class GUIScreenRBMKDisplay extends GuiScreen {
 		}
 		
 		if(b == 1 || b == this.mc.gameSettings.keyBindInventory.getKeyCode()) {
-			this.mc.displayGuiScreen((GuiScreen)null);
+			this.mc.displayGuiScreen(null);
 
 			if (this.mc.currentScreen == null)
 			{

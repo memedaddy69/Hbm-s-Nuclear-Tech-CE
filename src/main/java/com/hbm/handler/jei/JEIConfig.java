@@ -392,7 +392,7 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipeClickArea(GUIMachineRTG.class, 134, 22, 16, 52, RTG);
         registry.addRecipeClickArea(GUIMachineArcWelder.class, 72, 38, 32, 13, ARC_WELDER);
         registry.addRecipeClickArea(GUIMachineRotaryFurnace.class, 63, 31, 32, 9, ROTARY_FURNACE);
-        registry.addRecipeClickArea(GUIBlastFurnace.class, 62, 18, 56, 88, BLAST_FURNACE);
+        registry.addRecipeClickArea(GUIBlastFurnace.class, 62, 64, 56, 15, BLAST_FURNACE);
         registry.addRecipeClickArea(GUIElectrolyserFluid.class, 62, 26, 12, 40, ELECTROLYSIS_FLUID);
         registry.addRecipeClickArea(GUIElectrolyserMetal.class, 7, 46, 22, 25, ELECTROLYSIS_METAL);
         registry.addRecipeClickArea(GUIPyroOven.class, 57, 48, 27, 11, PYROLYSIS);
