@@ -20,7 +20,18 @@
 ### Breaking Changes
 - Fixed compatibility with Modern Splash 1.5.0+. Older versions of Modern Splash are no longer supported.
 ### Fixes
+- Artillery shells no longer duplicate their cargo when right-clicked repeatedly.
+- Fixed missing textures on the airblast and flue gas fluid tanks.
+- Corrected the blast furnace's JEI recipe-lookup click area.
+- Fixed a crash that could occur near climbable blocks (ladders, cables, etc.).
+- Fixed a crash and leftover stray particles when changing dimensions or leaving a world with instanced particles enabled.
+- Number displays no longer misrender; a misplaced decimal point is fixed, digits no longer overflow the display, and oversized values now read as all 9s.
+- Smoothed out the RBMK crane console's arm movement, which could appear jittery.
+- Fixed fluid networks mishandling transfers when multithreaded network updates are enabled.
 ### Changes
+- The schrabidium missile is now crafted with an anti-schrabidium cell and a quantum circuit.
+- Fuel- and battery-powered F.S.B. armor can now be enchanted.
 ### New Features
+- RBMK numitron displays gained per-screen toggles to abbreviate large numbers (e.g. 12.3k) and to pad with leading zeroes, along with a redesigned setup screen.
 ### Performance
 ### Misc
