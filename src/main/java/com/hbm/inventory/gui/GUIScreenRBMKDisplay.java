@@ -32,7 +32,9 @@ public class GUIScreenRBMKDisplay extends GuiScreen {
 	protected GuiTextField[] rtty = new GuiTextField[2];
 	protected boolean[] active = new boolean[2];
 	protected boolean[] polling = new boolean[2];
-	
+	protected boolean[] shorten_number = new boolean[2];
+	protected boolean[] leading_zeroes = new boolean[2];
+
 	public GUIScreenRBMKDisplay(TileEntityRBMKNumitron display) {
 		this.display = display;
 	}
@@ -49,13 +51,15 @@ public class GUIScreenRBMKDisplay extends GuiScreen {
 		int oY = 4;
 		
 		for(int i = 0; i < 2; i++) {
-			label[i] = new GuiTextField(0, this.fontRenderer, guiLeft + 27 + oX, guiTop + 55 + oY + i * 54, 84 - oX * 2, 14);
-			GUIScreenRBMKKeyPad.setupTextFieldStandard(label[i], 30, display.displays[i].label);
-			rtty[i] = new GuiTextField(0, this.fontRenderer, guiLeft + 27 + oX, guiTop + 73 + oY + i * 54, 84 - oX * 2, 14);
+			rtty[i] = new GuiTextField(0, this.fontRenderer, guiLeft + 27 + oX, guiTop + 55 + oY + i * 54, 85 - oX * 2, 14);
 			GUIScreenRBMKKeyPad.setupTextFieldStandard(rtty[i], 10, display.displays[i].rtty);
+			label[i] = new GuiTextField(0, this.fontRenderer, guiLeft + 27 + oX, guiTop + 73 + oY + i * 54, 85 - oX * 2, 14);
+			GUIScreenRBMKKeyPad.setupTextFieldStandard(label[i], 30, display.displays[i].label);
 
 			active[i] = display.displays[i].active;
 			polling[i] = display.displays[i].polling;
+			shorten_number[i] = display.displays[i].shorten_number;
+			leading_zeroes[i] = display.displays[i].leading_zeroes;
 		}
 	}
 
@@ -79,7 +83,9 @@ public class GUIScreenRBMKDisplay extends GuiScreen {
 		
 		for(int i = 0; i < 2; i++) {
 			if(this.active[i]) drawTexturedModalRect(guiLeft + 124, guiTop + i * 54 + 54, 18, 150, 16, 16);
-			if(this.polling[i]) drawTexturedModalRect(guiLeft + 141, guiTop + i * 54 + 53, 0, 150, 18, 18);
+			if(this.polling[i]) drawTexturedModalRect(guiLeft + 159, guiTop + i * 54 + 53, 0, 150, 18, 18);
+			if(this.shorten_number[i]) drawTexturedModalRect(guiLeft + 195, guiTop + i * 54 + 53, 34, 150, 18, 18);
+			if(this.leading_zeroes[i]) drawTexturedModalRect(guiLeft + 231, guiTop + i * 54 + 53, 52, 150, 18, 18);
 		}
 		
 		for(int i = 0; i < 2; i++) {
@@ -99,9 +105,21 @@ public class GUIScreenRBMKDisplay extends GuiScreen {
 				return;
 			}
 
-			if(guiLeft + 141 <= x && guiLeft + 141 + 18 > x && guiTop + i * 54 + 53 < y && guiTop + i * 54 + 53 + 18 >= y) {
+			if(guiLeft + 159 <= x && guiLeft + 159 + 18 > x && guiTop + i * 54 + 53 < y && guiTop + i * 54 + 53 + 18 >= y) {
 				this.polling[i] = !this.polling[i];
 				mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 0.5F + (this.polling[i] ? 0.25F : 0F)));
+				return;
+			}
+
+			if(guiLeft + 195 <= x && guiLeft + 195 + 18 > x && guiTop + i * 54 + 53 < y && guiTop + i * 54 + 53 + 18 >= y) {
+				this.shorten_number[i] = !this.shorten_number[i];
+				mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 0.5F + (this.shorten_number[i] ? 0.25F : 0F)));
+				return;
+			}
+
+			if(guiLeft + 231 <= x && guiLeft + 231 + 18 > x && guiTop + i * 54 + 53 < y && guiTop + i * 54 + 53 + 18 >= y) {
+				this.leading_zeroes[i] = !this.leading_zeroes[i];
+				mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 0.5F + (this.leading_zeroes[i] ? 0.25F : 0F)));
 				return;
 			}
 		}
@@ -111,13 +129,19 @@ public class GUIScreenRBMKDisplay extends GuiScreen {
 			NBTTagCompound data = new NBTTagCompound();
 			byte active = 0;
 			byte polling = 0;
+			byte shorten = 0;
+			byte leading = 0;
 			for(int i = 0; i < 2; i++) {
 				if(this.active[i]) active |= 1 << i;
 				if(this.polling[i]) polling |= 1 << i;
+				if(this.shorten_number[i]) shorten |= 1 << i;
+				if(this.leading_zeroes[i]) leading |= 1 << i;
 			}
 			data.setByte("active", active);
 			data.setByte("polling", polling);
-			
+			data.setByte("shorten_number", shorten);
+			data.setByte("leading_zeroes", leading);
+
 			for(int i = 0; i < 2; i++) {
 				data.setString("label" + i, this.label[i].getText());
 				data.setString("rtty" + i, this.rtty[i].getText());

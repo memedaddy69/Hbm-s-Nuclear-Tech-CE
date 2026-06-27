@@ -338,6 +338,7 @@ public final class ClimbableRegistry {
         public void collectIntersecting(World w, AxisAlignedBB q, int minSectionY, int maxSectionY,
                                         ReferenceOpenHashSet<IClimbable> seen, ArrayList<IClimbable> out) {
             for (int i = 0; i < list.size(); i++) {
+
                 collectCandidate(w, q, seen, out, list.get(i));
             }
         }
