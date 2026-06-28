@@ -774,6 +774,7 @@ public class ModItems {
     public static final Item ingot_copper = new ItemBakedBase("ingot_copper").setCreativeTab(MainRegistry.partsTab);
     public static final Item ingot_red_copper = new ItemBakedBase("ingot_red_copper").setCreativeTab(MainRegistry.partsTab);
     public static final Item ingot_tungsten = new ItemBakedBase("ingot_tungsten").setCreativeTab(MainRegistry.partsTab);
+	public static final Item ingot_tungsten_carbide = new ItemBakedBase("ingot_tungsten_carbide").setCreativeTab(MainRegistry.partsTab);
     public static final Item ingot_aluminium = new ItemBakedBase("ingot_aluminium").setCreativeTab(MainRegistry.partsTab);
     public static final Item ingot_beryllium = new ItemBakedBase("ingot_beryllium").setCreativeTab(MainRegistry.partsTab);
     public static final Item ingot_lead = new ItemBakedBase("ingot_lead").setCreativeTab(MainRegistry.partsTab);
