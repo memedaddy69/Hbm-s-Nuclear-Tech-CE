@@ -1,15 +1,11 @@
 package com.hbm.mixin;
 
-import com.hbm.main.client.StaticTesrBakedModels;
 import com.hbm.render.chunk.ChunkSpanningTesrHelper;
 import com.hbm.render.chunk.IExtraExtentsHolder;
 import com.hbm.render.chunk.IShadowRenderFrameStamp;
 import com.hbm.util.ChunkSpanAccumulator;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.chunk.CompiledChunk;
 import net.minecraft.client.renderer.chunk.RenderChunk;
 import net.minecraft.client.renderer.chunk.SetVisibility;
@@ -17,7 +13,6 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -28,9 +23,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(RenderChunk.class)
 public abstract class MixinRenderChunk implements IShadowRenderFrameStamp {
-
-    @Unique
-    private static final ThreadLocal<ChunkSpanAccumulator> hbm$accumulator = ThreadLocal.withInitial(ChunkSpanAccumulator::new);
 
     @Unique
     private int hbm$shadowFrameStamp = Integer.MIN_VALUE;
@@ -67,32 +59,8 @@ public abstract class MixinRenderChunk implements IShadowRenderFrameStamp {
 
     @Inject(method = "rebuildChunk", at = @At("HEAD"), require = 1)
     private void hbm$resetOversizedExtents(float x, float y, float z, net.minecraft.client.renderer.chunk.ChunkCompileTaskGenerator generator, CallbackInfo ci) {
-        hbm$accumulator.get().reset();
+        ChunkSpanAccumulator.LOCAL.get().reset();
     }
-
-    @WrapOperation(method = "rebuildChunk", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/BlockRendererDispatcher;renderBlock(Lnet/minecraft/block/state/IBlockState;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/IBlockAccess;Lnet/minecraft/client/renderer/BufferBuilder;)Z"), require = 1)
-    private boolean hbm$trackOversizedBlock(BlockRendererDispatcher dispatcher, IBlockState state, BlockPos pos,
-                                            IBlockAccess world, BufferBuilder buffer, Operation<Boolean> original) {
-        boolean result = original.call(dispatcher, state, pos, world, buffer);
-        if (result) {
-            int[] extents = StaticTesrBakedModels.getManagedRenderExtents(state);
-            if (extents != null) {
-                int localX = pos.getX() - position.getX();
-                int localY = pos.getY() - position.getY();
-                int localZ = pos.getZ() - position.getZ();
-
-                ChunkSpanAccumulator acc = hbm$accumulator.get();
-                acc.negX = Math.max(acc.negX, extents[4] - localX);
-                acc.posX = Math.max(acc.posX, localX + extents[5] - 15);
-                acc.negY = Math.max(acc.negY, extents[1] - localY);
-                acc.posY = Math.max(acc.posY, localY + extents[0] - 15);
-                acc.negZ = Math.max(acc.negZ, extents[2] - localZ);
-                acc.posZ = Math.max(acc.posZ, localZ + extents[3] - 15);
-            }
-        }
-        return result;
-    }
-
     @WrapOperation(method = "rebuildChunk", require = 1, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/tileentity/TileEntitySpecialRenderer;isGlobalRenderer(Lnet/minecraft/tileentity/TileEntity;)Z"))
     private boolean hbm$trackOversizedTesr(TileEntitySpecialRenderer<TileEntity> renderer, TileEntity te, Operation<Boolean> original) {
         if (original.call(renderer, te))
@@ -110,7 +78,7 @@ public abstract class MixinRenderChunk implements IShadowRenderFrameStamp {
         int negZ = (int) Math.ceil(Math.max(0.0D, sz - bb.minZ));
         int posZ = (int) Math.ceil(Math.max(0.0D, bb.maxZ - (sz + 16.0D)));
         if ((negX | posX | negY | posY | negZ | posZ) != 0) {
-            ChunkSpanAccumulator acc = hbm$accumulator.get();
+            ChunkSpanAccumulator acc = ChunkSpanAccumulator.LOCAL.get();
             acc.negX = Math.max(acc.negX, negX);
             acc.posX = Math.max(acc.posX, posX);
             acc.negY = Math.max(acc.negY, negY);
@@ -125,7 +93,7 @@ public abstract class MixinRenderChunk implements IShadowRenderFrameStamp {
     @WrapOperation(method = "rebuildChunk", require = 1, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/chunk/CompiledChunk;setVisibility(Lnet/minecraft/client/renderer/chunk/SetVisibility;)V"))
     private void hbm$publishOversizedExtents(CompiledChunk compiledChunk, SetVisibility visibility, Operation<Void> original) {
         IExtraExtentsHolder holder = (IExtraExtentsHolder) compiledChunk;
-        ChunkSpanAccumulator acc = hbm$accumulator.get();
+        ChunkSpanAccumulator acc = ChunkSpanAccumulator.LOCAL.get();
         holder.hbm$setOversizedModelExtents(acc.negX, acc.posX, acc.negY, acc.posY, acc.negZ, acc.posZ);
         if (!acc.spanningTesrs.isEmpty()) {
             holder.hbm$setChunkSpanningTesrs(acc.spanningTesrs.toArray(new TileEntity[0]));

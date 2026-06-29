@@ -13,6 +13,10 @@ import java.util.ArrayList;
  * published into the CompiledChunk before setVisibility, all on the same thread.
  */
 public final class ChunkSpanAccumulator {
+
+
+    public static final ThreadLocal<ChunkSpanAccumulator> LOCAL = ThreadLocal.withInitial(ChunkSpanAccumulator::new);
+
     public  int negX, posX, negY, posY, negZ, posZ;
     public final ArrayList<TileEntity> spanningTesrs = new ArrayList<>();
 
