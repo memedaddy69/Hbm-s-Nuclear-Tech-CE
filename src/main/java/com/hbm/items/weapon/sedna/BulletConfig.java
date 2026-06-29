@@ -96,7 +96,7 @@ public class BulletConfig implements Cloneable {
     public static BiConsumer<EntityBulletBaseMK4, RayTraceResult> LAMBDA_STANDARD_ENTITY_HIT = (bullet, mop) -> {
 
         if (mop.typeOfHit == mop.typeOfHit.ENTITY) {
-            Entity entity = mop.entityHit;
+            Entity entity = EntityDamageUtil.unwrapMultiPart(mop.entityHit);
 
             if (entity == bullet.getThrower() && bullet.ticksExisted < bullet.selfDamageDelay()) return;
             if (entity instanceof EntityLivingBase && ((EntityLivingBase) entity).getHealth() <= 0) return;
@@ -136,7 +136,7 @@ public class BulletConfig implements Cloneable {
     public static BiConsumer<EntityBulletBeamBase, RayTraceResult> LAMBDA_STANDARD_BEAM_HIT = (bullet, mop) -> {
 
         if (mop.typeOfHit == mop.typeOfHit.ENTITY) {
-            Entity entity = mop.entityHit;
+            Entity entity = EntityDamageUtil.unwrapMultiPart(mop.entityHit);
 
             if (entity instanceof EntityLivingBase && ((EntityLivingBase) entity).getHealth() <= 0) return;
 
@@ -155,7 +155,7 @@ public class BulletConfig implements Cloneable {
     public static BiConsumer<EntityBulletBeamBase, RayTraceResult> LAMBDA_BEAM_HIT = (beam, mop) -> {
 
         if (mop.typeOfHit == mop.typeOfHit.ENTITY) {
-            Entity entity = mop.entityHit;
+            Entity entity = EntityDamageUtil.unwrapMultiPart(mop.entityHit);
 
             if (entity instanceof EntityLivingBase && ((EntityLivingBase) entity).getHealth() <= 0) return;
 

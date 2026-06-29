@@ -38,28 +38,24 @@ public abstract class MixinEntityPlayer {
         if (!(living instanceof EntityPlayer)) return;
         if (!DamageResistanceHandler.isMobDamage(living)) return;
 
-        try {
-            EntityPlayer self = (EntityPlayer) living;
-            float currentHealth = living.getHealth();
+        EntityPlayer self = (EntityPlayer) living;
+        float currentHealth = living.getHealth();
 
-            // Only intercept health reductions, not healing.
-            if (health >= currentHealth) return;
+        // Only intercept health reductions, not healing.
+        if (health >= currentHealth) return;
 
-            float hdc = DamageResistanceHandler.getHDCFor(self);
-            if (hdc <= 0F) return;
+        float hdc = DamageResistanceHandler.getHDCFor(self);
+        if (hdc <= 0F) return;
 
-            float proposedDamage = currentHealth - health;
-            if (proposedDamage > hdc) {
-                ci.cancel();
-                hbm$hdcActive.set(true);
-                try {
-                    living.setHealth(currentHealth - hdc);
-                } finally {
-                    hbm$hdcActive.set(false);
-                }
+        float proposedDamage = currentHealth - health;
+        if (proposedDamage > hdc) {
+            ci.cancel();
+            hbm$hdcActive.set(true);
+            try {
+                living.setHealth(currentHealth - hdc);
+            } finally {
+                hbm$hdcActive.set(false);
             }
-        } finally {
-            DamageResistanceHandler.clearMobDamage(living);
         }
     }
 }

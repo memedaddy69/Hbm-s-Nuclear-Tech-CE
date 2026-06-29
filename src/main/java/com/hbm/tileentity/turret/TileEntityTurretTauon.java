@@ -12,8 +12,11 @@ import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.particle.helper.HbmEffectNT;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.tileentity.IGUIProvider;
+import com.hbm.util.EntityDamageUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
@@ -133,7 +136,12 @@ public class TileEntityTurretTauon extends TileEntityTurretBaseNT implements IGU
 			BulletConfig conf = this.getFirstConfigLoaded();
 			
 			if(conf != null && this.target != null) {
-				this.target.attackEntityFrom(ModDamageSource.electricity, 30F + world.rand.nextInt(11));
+				Entity unwrapped = EntityDamageUtil.unwrapMultiPart(this.target);
+				if (unwrapped instanceof EntityLivingBase living) {
+					EntityDamageUtil.attackEntityFromNT(living, ModDamageSource.electricity, 30F + world.rand.nextInt(11), true, true, 0, 0, 0);
+				} else {
+					EntityDamageUtil.attackEntityFromIgnoreIFrame(unwrapped, ModDamageSource.electricity, 30F + world.rand.nextInt(11));
+				}
 				this.consumeAmmo(conf.ammo);
 				this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.tauShoot, SoundCategory.BLOCKS, 4.0F, 0.9F + world.rand.nextFloat() * 0.3F);
 				this.shot = true;

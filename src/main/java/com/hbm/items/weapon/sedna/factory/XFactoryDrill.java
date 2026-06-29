@@ -16,6 +16,7 @@ import com.hbm.util.EntityDamageUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.RenderGlobal;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -74,10 +75,11 @@ public class XFactoryDrill {
             if(mop != null) {
                 if(mop.typeOfHit == RayTraceResult.Type.ENTITY) {
                     float damage = primary.getBaseDamage(stack);
-                    if(mop.entityHit instanceof EntityLivingBase) {
-                        EntityDamageUtil.attackEntityFromNT((EntityLivingBase) mop.entityHit, DamageSource.causePlayerDamage(ctx.getPlayer()), damage, true, true, 0.1F, getModdableDTNegation(stack, 2F), getModdablePiercing(stack, 0.15F));
+                    Entity entityHit = EntityDamageUtil.unwrapMultiPart(mop.entityHit);
+                    if(entityHit instanceof EntityLivingBase) {
+                        EntityDamageUtil.attackEntityFromNT((EntityLivingBase) entityHit, DamageSource.causePlayerDamage(ctx.getPlayer()), damage, true, true, 0.1F, getModdableDTNegation(stack, 2F), getModdablePiercing(stack, 0.15F));
                     } else {
-                        mop.entityHit.attackEntityFrom(DamageSource.causePlayerDamage(ctx.getPlayer()), damage);
+                        entityHit.attackEntityFrom(DamageSource.causePlayerDamage(ctx.getPlayer()), damage);
                     }
                 }
                 if(player != null && mop.typeOfHit == RayTraceResult.Type.BLOCK) {

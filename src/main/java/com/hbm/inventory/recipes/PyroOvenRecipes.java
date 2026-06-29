@@ -3,7 +3,9 @@ package com.hbm.inventory.recipes;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
+import com.hbm.inventory.OreDictManager.DictFrame;
 import com.hbm.inventory.RecipesCommon;
+import com.hbm.inventory.RecipesCommon.OreDictStack;
 import com.hbm.inventory.fluid.FluidStack;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
@@ -24,7 +26,6 @@ import java.util.List;
 
 import static com.hbm.inventory.OreDictManager.*;
 import static com.hbm.inventory.fluid.Fluids.*;
-import static com.hbm.inventory.fluid.Fluids.GAS_COKER;
 
 public class PyroOvenRecipes extends SerializableRecipe {
 
@@ -71,6 +72,9 @@ public class PyroOvenRecipes extends SerializableRecipe {
             recipes.add(new PyroOvenRecipe(10).in(new RecipesCommon.ComparableStack(ItemBedrockOreNew.make(ItemBedrockOreNew.BedrockOreGrade.SOLVENT_BYPRODUCT, type))).out(new FluidStack(Fluids.VITRIOL, 50)).out(ItemBedrockOreNew.make(ItemBedrockOreNew.BedrockOreGrade.SOLVENT_ROASTED, type)));
             recipes.add(new PyroOvenRecipe(10).in(new RecipesCommon.ComparableStack(ItemBedrockOreNew.make(ItemBedrockOreNew.BedrockOreGrade.RAD_BYPRODUCT, type))).out(new FluidStack(Fluids.VITRIOL, 50)).out(ItemBedrockOreNew.make(ItemBedrockOreNew.BedrockOreGrade.RAD_ROASTED, type)));
         }
+
+        // steam to syngas is 1:2, syngas to LPS in this recipe is 2:1, so you can actually cycle this
+        recipes.add(new PyroOvenRecipe(300).in(new FluidStack(Fluids.SYNGAS, 2_000)).in(new OreDictStack(W.dust())).out(new FluidStack(Fluids.SPENTSTEAM, 1_000)).out(new ItemStack(ModItems.ingot_tungsten_carbide)));
 
         //syngas from coal
         recipes.add(new PyroOvenRecipe(100)

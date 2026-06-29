@@ -91,10 +91,13 @@ public class XFactoryRocket {
     public static BiConsumer<EntityBulletBaseMK4, RayTraceResult> LAMBDA_STANDARD_EXPLODE_HEAT = (bullet, mop) -> {
         if(mop.typeOfHit == RayTraceResult.Type.ENTITY && bullet.ticksExisted < 3) return;
         Lego.standardExplode(bullet, mop, 3.5F); bullet.setDead();
-        if(mop.typeOfHit == RayTraceResult.Type.ENTITY && mop.entityHit instanceof EntityLivingBase living) {
-            EntityDamageUtil.attackEntityFromNT(living, BulletConfig.getDamage(bullet, bullet.getThrower(), DamageResistanceHandler.DamageClass.EXPLOSIVE), bullet.damage * 3F, true, true, 0.5F, 5F, 0.2F);
-        } else if(mop.typeOfHit == RayTraceResult.Type.ENTITY) {
-            mop.entityHit.attackEntityFrom(BulletConfig.getDamage(bullet, bullet.getThrower(), DamageResistanceHandler.DamageClass.EXPLOSIVE), bullet.damage * 3F);
+        if(mop.typeOfHit == RayTraceResult.Type.ENTITY) {
+            Entity entityHit = EntityDamageUtil.unwrapMultiPart(mop.entityHit);
+            if(entityHit instanceof EntityLivingBase living) {
+                EntityDamageUtil.attackEntityFromNT(living, BulletConfig.getDamage(bullet, bullet.getThrower(), DamageResistanceHandler.DamageClass.EXPLOSIVE), bullet.damage * 3F, true, true, 0.5F, 5F, 0.2F);
+            } else {
+                entityHit.attackEntityFrom(BulletConfig.getDamage(bullet, bullet.getThrower(), DamageResistanceHandler.DamageClass.EXPLOSIVE), bullet.damage * 3F);
+            }
         }
     };
     public static BiConsumer<EntityBulletBaseMK4, RayTraceResult> LAMBDA_STANDARD_EXPLODE_DEMO = (bullet, mop) -> {

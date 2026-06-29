@@ -19,6 +19,7 @@ import com.hbm.util.EntityDamageUtil;
 import com.hbm.util.I18nUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -262,10 +263,15 @@ public class TileEntityTurretMaxwell extends TileEntityTurretBaseNT
       if (_5g && target instanceof EntityPlayer player) {
         player.addPotionEffect(new PotionEffect(HbmPotion.death, 30 * 60 * 20, 0, true, false));
       } else {
-        EntityDamageUtil.attackEntityFromIgnoreIFrame(
-            this.target,
-            ModDamageSource.microwave,
-            (this.blackLevel * 10 + this.redLevel + 1F) * 0.25F);
+        Entity unwrappedTarget = EntityDamageUtil.unwrapMultiPart(this.target);
+        if (unwrappedTarget instanceof EntityLivingBase living) {
+          EntityDamageUtil.attackEntityFromNT(living, ModDamageSource.microwave, (this.blackLevel * 10 + this.redLevel + 1F) * 0.25F, true, true, 0, 0, 0);
+        } else {
+          EntityDamageUtil.attackEntityFromIgnoreIFrame(
+              unwrappedTarget,
+              ModDamageSource.microwave,
+              (this.blackLevel * 10 + this.redLevel + 1F) * 0.25F);
+        }
       }
 
       if (pinkLevel > 0) this.target.setFire(this.pinkLevel * 3);

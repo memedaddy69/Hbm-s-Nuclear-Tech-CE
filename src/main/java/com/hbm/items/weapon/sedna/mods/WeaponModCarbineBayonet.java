@@ -13,6 +13,7 @@ import com.hbm.render.anim.sedna.BusAnimationSequenceSedna;
 import com.hbm.render.anim.sedna.AnimationEnums.GunAnimation;
 import com.hbm.util.EntityDamageUtil;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
@@ -52,9 +53,10 @@ public class WeaponModCarbineBayonet extends WeaponModBase {
 				if(mop != null) {
 					if(mop.typeOfHit == mop.typeOfHit.ENTITY) {
 						float damage = 15F;
-						mop.entityHit.attackEntityFrom(DamageSource.causePlayerDamage(ctx.getPlayer()), damage);
-						mop.entityHit.motionX *= 2;
-						mop.entityHit.motionZ *= 2;
+						Entity entityHit = EntityDamageUtil.unwrapMultiPart(mop.entityHit);
+						entityHit.attackEntityFrom(DamageSource.causePlayerDamage(ctx.getPlayer()), damage);
+						entityHit.motionX *= 2;
+						entityHit.motionZ *= 2;
 						// TODO SOUND
 						entity.world.playSound(null, mop.entityHit.posX, mop.entityHit.posY, mop.entityHit.posZ, HBMSoundHandler.fireStab, SoundCategory.PLAYERS, 1F, 0.9F + entity.getRNG().nextFloat() * 0.2F);
 					}

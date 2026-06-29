@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.inventory.OreDictManager;
+import com.hbm.inventory.OreDictManager.DictFrame;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.inventory.RecipesCommon.OreDictStack;
@@ -39,6 +40,13 @@ public class ArcWelderRecipes extends SerializableRecipe {
             400L,
             new OreDictStack(STEEL.plate(), 2),
             new OreDictStack(MINGRADE.wireDense(), 2)));
+    recipes.add(
+        new ArcWelderRecipe(
+            new ItemStack(ModItems.neutron_reflector, 2),
+            400,
+            50_000L,
+            new OreDictStack(WC.ingot(), 2),
+            new OreDictStack(DURA.plate())));
     recipes.add(
         new ArcWelderRecipe(
             DictFrame.fromOne(ModItems.part_generic, EnumPartType.LDE),

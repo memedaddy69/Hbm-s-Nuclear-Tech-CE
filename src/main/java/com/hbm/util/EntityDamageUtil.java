@@ -9,6 +9,7 @@ import com.hbm.main.MainRegistry;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.MultiPartEntityPart;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,6 +19,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
+import net.minecraft.util.CombatRules;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
@@ -39,7 +41,20 @@ public class EntityDamageUtil {
     private static final MethodHandle getSoundVolumeHandle = MethodHandleHelper.findVirtual(EntityLivingBase.class, "getSoundVolume", "func_70599_aP", MethodType.methodType(float.class));
     private static final MethodHandle getSoundPitchHandle = MethodHandleHelper.findVirtual(EntityLivingBase.class, "getSoundPitch", "func_70647_i", MethodType.methodType(float.class));
 
+    /**
+     * If the given entity is a {@link MultiPartEntityPart} (e.g. an ender dragon segment),
+     * returns the parent entity so that custom damage handlers are applied to the real owner.
+     * Otherwise returns the entity unchanged.
+     */
+    public static Entity unwrapMultiPart(Entity entity) {
+        if (entity instanceof MultiPartEntityPart part && part.parent instanceof Entity parent) {
+            return parent;
+        }
+        return entity;
+    }
+
     public static boolean attackEntityFromIgnoreIFrame(Entity victim, DamageSource src, float damage) {
+        victim = unwrapMultiPart(victim);
 
         if (!victim.attackEntityFrom(src, damage)) {
             float lastDamage = 0;
@@ -318,15 +333,25 @@ public class EntityDamageUtil {
 
     public static float applyArmorCalculationsNT(EntityLivingBase living, DamageSource source, float amount) {
         if (!source.isUnblockable()) {
-            float i = 25F - (living.getTotalArmorValue() * (1 - DamageResistanceHandler.currentPDR));
-            float armor = amount * i;
-            damageArmorNT(living, amount);
-            amount = armor / 25.0F;
+            float armor = living.getTotalArmorValue();
+
+            float toughness =
+                (float) living.getEntityAttribute(
+                    SharedMonsterAttributes.ARMOR_TOUGHNESS
+                ).getAttributeValue();
+
+            float effectiveArmor =
+                armor * (1 - DamageResistanceHandler.currentPDR);
+
+            amount = CombatRules.getDamageAfterAbsorb(
+                amount,
+                effectiveArmor,
+                toughness
+            );
         }
 
         return amount;
     }
-
 
     public static float applyPotionDamageCalculations(EntityLivingBase living, DamageSource source, float amount) {
         if (source.isDamageAbsolute()) {

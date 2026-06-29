@@ -423,13 +423,28 @@ public class DamageResistanceHandler {
     }
 
     public static boolean isMobDamage(EntityLivingBase entity) {
-        return mobDamageTarget.get() == entity;
+        if (isSEDNADamage) return false;
+        if (mobDamageTarget.get() == entity) return true;
+        return isDirectMobAttackContext();
     }
 
     public static void clearMobDamage(EntityLivingBase entity) {
         if (mobDamageTarget.get() == entity) {
             mobDamageTarget.remove();
         }
+    }
+
+    public static boolean isDirectMobAttackContext() {
+        for (StackTraceElement frame : Thread.currentThread().getStackTrace()) {
+            String method = frame.getMethodName();
+            if (!"attackEntityAsMob".equals(method) && !"attackEntityAsMobMinimum".equals(method)) continue;
+
+            String className = frame.getClassName();
+            return !className.startsWith("net.minecraft.entity.player.")
+                    && !className.contains(".entity.player.");
+        }
+
+        return false;
     }
 
     @SubscribeEvent
