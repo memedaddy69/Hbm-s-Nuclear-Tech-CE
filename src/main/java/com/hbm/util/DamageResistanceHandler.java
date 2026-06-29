@@ -13,6 +13,7 @@ import com.hbm.util.Tuple.Quartet;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityCreeper;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -22,7 +23,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.io.*;
@@ -59,6 +62,12 @@ public class DamageResistanceHandler {
      * Currently cached armor piercing %
      */
     public static float currentPDR = 0F; //Norwood: I'll need that elsewhere
+    /**
+     * True when damage is being processed through SEDNA (attackEntityFromNT).
+     * When false the GDT/GDM set bonuses apply instead of PHYS/Other resistances.
+     */
+    public static boolean isSEDNADamage = false;
+    private static final ThreadLocal<EntityLivingBase> mobDamageTarget = new ThreadLocal<>();
 
     public static void init() {
         File folder = MainRegistry.configHbmDir;
@@ -125,67 +134,72 @@ public class DamageResistanceHandler {
         itemStats.put(ModItems.jackt2, new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 5F, 0.5F));
 
         registerSet(ModItems.steel_helmet, ModItems.steel_plate, ModItems.steel_legs, ModItems.steel_boots,
-                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 2F, 0.1F));
+                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 2F, 0.1F).setGDM(0.85F).setGDT(2.0F));
         registerSet(ModItems.titanium_helmet, ModItems.titanium_plate, ModItems.titanium_legs, ModItems.titanium_boots,
-                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 3F, 0.1F));
+                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 3F, 0.1F).setGDM(0.8F).setGDT(3.0F));
         registerSet(ModItems.alloy_helmet, ModItems.alloy_plate, ModItems.alloy_legs, ModItems.alloy_boots,
                 new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 2F, 0.1F));
         registerSet(ModItems.cobalt_helmet, ModItems.cobalt_plate, ModItems.cobalt_legs, ModItems.cobalt_boots,
-                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 2F, 0.1F));
+                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 2F, 0.1F).setGDM(0.75F).setGDT(2.0F));
         registerSet(ModItems.starmetal_helmet, ModItems.starmetal_plate, ModItems.starmetal_legs, ModItems.starmetal_boots,
-                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 3F, 0.25F).setOther(1F, 0.1F));
+                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 3F, 0.25F).setOther(1F, 0.1F).setGDM(0.5F).setGDT(3.0F).setHDC(25F));
         registerSet(null, null, ModItems.zirconium_legs, null, new ResistanceStats()
                 .setOther(0F, 1F)); //What?
                          //MetalloloM: *Yes*
-        registerSet(ModItems.dnt_helmet, ModItems.dnt_plate, ModItems.dnt_legs, ModItems.dnt_boots, new ResistanceStats());
+        registerSet(ModItems.dnt_helmet, ModItems.dnt_plate, ModItems.dnt_legs, ModItems.dnt_boots,
+                new ResistanceStats().setGDM(0.001F).setHDC(5F));
         registerSet(ModItems.cmb_helmet, ModItems.cmb_plate, ModItems.cmb_legs, ModItems.cmb_boots,
-                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 5F, 0.5F).setOther(5F, 0.25F));
+                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 5F, 0.5F).setOther(5F, 0.25F).setGDM(0.5F).setGDT(5.0F).setHDC(18.0F));
         registerSet(ModItems.schrabidium_helmet, ModItems.schrabidium_plate, ModItems.schrabidium_legs, ModItems.schrabidium_boots,
-                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 10F, 0.65F).setOther(5F, 0.5F));
+                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 10F, 0.65F).setOther(5F, 0.5F).setGDM(0.1F).setGDT(16.0F).setHDC(4.0F));
         registerSet(ModItems.robes_helmet, ModItems.robes_plate, ModItems.robes_legs, ModItems.robes_boots, new ResistanceStats());
 
         registerSet(ModItems.security_helmet, ModItems.security_plate, ModItems.security_legs, ModItems.security_boots,
-                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 5F, 0.5F).addCategory(CATEGORY_EXPLOSION, 2F, 0.25F));
+                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 5F, 0.5F).addCategory(CATEGORY_EXPLOSION, 2F, 0.25F).setGDM(0.5F).setGDT(5.0F));
         registerSet(ModItems.steamsuit_helmet, ModItems.steamsuit_plate, ModItems.steamsuit_legs, ModItems.steamsuit_boots,
-                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 2F, 0.15F).addCategory(CATEGORY_FIRE, 0.5F, 0.25F).addExact(DamageSource.FALL.getDamageType(), 5F, 0.25F).setOther(0F, 0.1F));
+                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 2F, 0.15F).addCategory(CATEGORY_FIRE, 0.5F, 0.25F).addExact(DamageSource.FALL.getDamageType(), 5F, 0.25F).setOther(0F, 0.1F).setGDM(0.5F).setGDT(3.0F).setHDC(25F));
         registerSet(ModItems.dieselsuit_helmet, ModItems.dieselsuit_plate, ModItems.dieselsuit_legs, ModItems.dieselsuit_boots, new
         ResistanceStats()
                 .addCategory(CATEGORY_PHYSICAL, 1F, 0.15F)
                 .addCategory(CATEGORY_FIRE, 0.5F, 0.5F)
                 .addCategory(CATEGORY_EXPLOSION, 2F, 0.15F)
-                .setOther(0F, 0.1F));
+                .setOther(0F, 0.1F)
+                .setGDM(0.5F).setGDT(2.0F).setHDC(25F));
         registerSet(ModItems.ajr_helmet, ModItems.ajr_plate, ModItems.ajr_legs, ModItems.ajr_boots,
-                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 4F, 0.15F).addCategory(CATEGORY_FIRE, 0.5F, 0.35F).addCategory(CATEGORY_EXPLOSION, 7.5F, 0.25F).addExact(DamageSource.FALL.getDamageType(), 0F, 1F).setOther(0F, 0.15F));
+                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 4F, 0.15F).addCategory(CATEGORY_FIRE, 0.5F, 0.35F).addCategory(CATEGORY_EXPLOSION, 7.5F, 0.25F).addExact(DamageSource.FALL.getDamageType(), 0F, 1F).setOther(0F, 0.15F).setGDM(0.25F).setGDT(6.0F).setHDC(12.0F));
         registerSet(ModItems.ajro_helmet, ModItems.ajro_plate, ModItems.ajro_legs, ModItems.ajro_boots,
-                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 4F, 0.15F).addCategory(CATEGORY_FIRE, 0.5F, 0.35F).addCategory(CATEGORY_EXPLOSION, 7.5F, 0.25F).addExact(DamageSource.FALL.getDamageType(), 0F, 1F).setOther(0F, 0.15F));
+                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 4F, 0.15F).addCategory(CATEGORY_FIRE, 0.5F, 0.35F).addCategory(CATEGORY_EXPLOSION, 7.5F, 0.25F).addExact(DamageSource.FALL.getDamageType(), 0F, 1F).setOther(0F, 0.15F).setGDM(0.25F).setGDT(6.0F).setHDC(12.0F));
         registerSet(ModItems.rpa_helmet, ModItems.rpa_plate, ModItems.rpa_legs, ModItems.rpa_boots,
-                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 25F, 0.65F).addCategory(CATEGORY_FIRE, 10F, 0.9F).addCategory(CATEGORY_EXPLOSION, 15F, 0.25F).addCategory(CATEGORY_ENERGY, 25F, 0.75F).addExact(DamageSource.FALL.getDamageType(), 0F, 1F).addExact(DamageClass.LASER.name(), 10F, 0.75F).setOther(15F, 0.3F));
+                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 25F, 0.65F).addCategory(CATEGORY_FIRE, 10F, 0.9F).addCategory(CATEGORY_EXPLOSION, 15F, 0.25F).addCategory(CATEGORY_ENERGY, 25F, 0.75F).addExact(DamageSource.FALL.getDamageType(), 0F, 1F).addExact(DamageClass.LASER.name(), 10F, 0.75F).setOther(15F, 0.3F).setGDM(0.1F).setGDT(20.0F).setHDC(4.0F));
         registerSet(ModItems.ncrpa_helmet, ModItems.ncrpa_plate, ModItems.ncrpa_legs, ModItems.ncrpa_boots, new ResistanceStats()
                 .addCategory(CATEGORY_PHYSICAL, 25F, 0.65F)
                 .addCategory(CATEGORY_FIRE, 10F, 0.9F)
                 .addCategory(CATEGORY_EXPLOSION, 15F, 0.25F)
                 .addCategory(CATEGORY_ENERGY, 10F, 0.5F)
                 .addExact(DamageSource.FALL.damageType, 0F, 1F)
-                .setOther(15F, 0.25F));
+                .setOther(15F, 0.25F)
+                .setGDM(0.1F).setGDT(25.0F).setHDC(4.0F));
         ResistanceStats bj =
-                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 5F, 0.5F).addCategory(CATEGORY_FIRE, 2.5F, 0.5F).addCategory(CATEGORY_EXPLOSION, 10F, 0.25F).addExact(DamageSource.FALL.getDamageType(), 0F, 1F).setOther(2F, 0.15F);
+                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 5F, 0.5F).addCategory(CATEGORY_FIRE, 2.5F, 0.5F).addCategory(CATEGORY_EXPLOSION, 10F, 0.25F).addExact(DamageSource.FALL.getDamageType(), 0F, 1F).setOther(2F, 0.15F).setGDM(0.15F).setGDT(10.0F).setHDC(6.0F);
         registerSet(ModItems.bj_helmet, ModItems.bj_plate, ModItems.bj_legs, ModItems.bj_boots, bj);
         registerSet(ModItems.bj_helmet, ModItems.bj_plate_jetpack, ModItems.bj_legs, ModItems.bj_boots, bj);
         registerSet(ModItems.envsuit_helmet, ModItems.envsuit_plate, ModItems.envsuit_legs, ModItems.envsuit_boots, new ResistanceStats()
                 .addCategory(CATEGORY_FIRE, 2F, 0.75F)
                 .addExact(DamageSource.DROWN.getDamageType(), 0F, 1F)
                 .addExact(DamageSource.FALL.getDamageType(), 5F, 0.75F)
-                .setOther(0F, 0.1F));
+                .setOther(0F, 0.1F)
+                .setGDM(0.75F).setGDT(3.0F));
         registerSet(ModItems.hev_helmet, ModItems.hev_plate, ModItems.hev_legs, ModItems.hev_boots,
-                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 2F, 0.25F).addCategory(CATEGORY_FIRE, 0.5F, 0.5F).addCategory(CATEGORY_EXPLOSION, 5F, 0.25F).addExact(DamageSource.ON_FIRE.getDamageType(), 0F, 1F).addExact(DamageSource.FALL.getDamageType(), 10F, 0F).setOther(2F, 0.25F));
+                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 2F, 0.25F).addCategory(CATEGORY_FIRE, 0.5F, 0.5F).addCategory(CATEGORY_EXPLOSION, 5F, 0.25F).addExact(DamageSource.ON_FIRE.getDamageType(), 0F, 1F).addExact(DamageSource.FALL.getDamageType(), 10F, 0F).setOther(2F, 0.25F).setGDM(0.2F).setGDT(8.0F).setHDC(8.0F));
         registerSet(ModItems.bismuth_helmet, ModItems.bismuth_plate, ModItems.bismuth_legs, ModItems.bismuth_boots, new ResistanceStats()
                 .addCategory(CATEGORY_PHYSICAL, 2F, 0.15F)
                 .addCategory(CATEGORY_FIRE, 5F, 0.5F)
                 .addCategory(CATEGORY_EXPLOSION, 5F, 0.25F)
                 .addExact(DamageSource.FALL.getDamageType(), 0F, 1F)
-                .setOther(2F, 0.25F));
+                .setOther(2F, 0.25F)
+                .setGDM(0.5F).setGDT(2.0F).setHDC(20F));
         registerSet(ModItems.fau_helmet, ModItems.fau_plate, ModItems.fau_legs, ModItems.fau_boots,
-                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 100F, 0.99F).addCategory(CATEGORY_EXPLOSION, 50F, 0.95F).addCategory(CATEGORY_FIRE, 100F, 1F).addExact(DamageClass.LASER.name(), 25F, 0.95F).addExact(DamageSource.FALL.getDamageType(), 0F, 1F).setOther(100F, 0.99F));
+                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 100F, 0.99F).addCategory(CATEGORY_EXPLOSION, 50F, 0.95F).addCategory(CATEGORY_FIRE, 100F, 1F).addExact(DamageClass.LASER.name(), 25F, 0.95F).addExact(DamageSource.FALL.getDamageType(), 0F, 1F).setOther(100F, 0.99F).setGDM(0.05F).setGDT(5.0F).setHDC(4.0F));
         registerSet(ModItems.dns_helmet, ModItems.dns_plate, ModItems.dns_legs, ModItems.dns_boots,
                 new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 1000F, 1F).addCategory(CATEGORY_EXPLOSION, 100F, 0.99F).addCategory(CATEGORY_FIRE, 0F, 1F).setOther(1000F, 1F));
         registerSet(ModItems.taurun_helmet, ModItems.taurun_plate, ModItems.taurun_legs, ModItems.taurun_boots, new ResistanceStats()
@@ -193,13 +207,15 @@ public class DamageResistanceHandler {
                 .addCategory(CATEGORY_FIRE, 0F, 0.25F)
                 .addCategory(CATEGORY_EXPLOSION, 0F, 0.25F)
                 .addExact(DamageSource.FALL.getDamageType(), 4F, 0.5F)
-                .setOther(2F, 0.1F));
+                .setOther(2F, 0.1F)
+                .setGDM(0.5F).setGDT(2.0F).setHDC(20F));
         registerSet(ModItems.t51_helmet, ModItems.t51_plate, ModItems.t51_legs, ModItems.t51_boots, new ResistanceStats()
                 .addCategory(CATEGORY_PHYSICAL, 2F, 0.15F)
                 .addCategory(CATEGORY_FIRE, 0.5F, 0.35F)
                 .addCategory(CATEGORY_EXPLOSION, 5F, 0.25F)
                 .addExact(DamageSource.FALL.damageType, 0F, 1F)
-                .setOther(0F, 0.1F));
+                .setOther(0F, 0.1F)
+                .setGDM(0.5F).setGDT(4.0F).setHDC(20.0F));
         registerSet(ModItems.trenchmaster_helmet, ModItems.trenchmaster_plate, ModItems.trenchmaster_legs, ModItems.trenchmaster_boots, new
         ResistanceStats()
                 .addCategory(CATEGORY_PHYSICAL, 5F, 0.5F)
@@ -207,7 +223,8 @@ public class DamageResistanceHandler {
                 .addCategory(CATEGORY_EXPLOSION, 5F, 0.25F)
                 .addExact(DamageClass.LASER.name(), 15F, 0.9F)
                 .addExact(DamageSource.FALL.getDamageType(), 10F, 0.5F)
-                .setOther(5F, 0.25F));
+                .setOther(5F, 0.25F)
+                .setGDM(0.15F).setGDT(8.0F).setHDC(6.0F));
 
         registerSet(ModItems.euphemium_helmet, ModItems.euphemium_plate, ModItems.euphemium_legs, ModItems.euphemium_boots,
                 new ResistanceStats().setOther(1_000_000F, 1F));
@@ -264,6 +281,12 @@ public class DamageResistanceHandler {
                 }
                 if (stats.otherResistance != null)
                     toAdd.add(I18nUtil.resolveKey("damage.other") + ": " + stats.otherResistance.threshold + "/" + ((int) (stats.otherResistance.resistance * 100)) + "%");
+                if (stats.gdt != 0F)
+                    toAdd.add(I18nUtil.resolveKey("damage.gdt") + ": " + stats.gdt);
+                if (stats.gdm != 0F)
+                    toAdd.add(I18nUtil.resolveKey("damage.gdm") + ": x" + stats.gdm);
+                if (stats.hdc != 0F)
+                    toAdd.add(I18nUtil.resolveKey("damage.hdc") + ": " + stats.hdc);
 
                 if (!toAdd.isEmpty()) {
                     desc.add(TextFormatting.DARK_PURPLE + I18nUtil.resolveKey("damage.inset"));
@@ -292,6 +315,7 @@ public class DamageResistanceHandler {
             }
             if (stats.otherResistance != null)
                 toAdd.add(I18nUtil.resolveKey("damage.other") + ": " + stats.otherResistance.threshold + "/" + ((int) (stats.otherResistance.resistance * 100)) + "%");
+            // GDT/GDM are set-only bonuses, not shown on per-piece tooltips
 
             if (!toAdd.isEmpty()) {
                 desc.add(TextFormatting.DARK_PURPLE + I18nUtil.resolveKey("damage.item"));
@@ -388,11 +412,24 @@ public class DamageResistanceHandler {
     public static void setup(float dt, float dr) {
         currentPDT = dt;
         currentPDR = dr;
+        isSEDNADamage = true;
     }
 
     public static void reset() {
         currentPDT = 0;
         currentPDR = 0;
+        isSEDNADamage = false;
+        mobDamageTarget.remove();
+    }
+
+    public static boolean isMobDamage(EntityLivingBase entity) {
+        return mobDamageTarget.get() == entity;
+    }
+
+    public static void clearMobDamage(EntityLivingBase entity) {
+        if (mobDamageTarget.get() == entity) {
+            mobDamageTarget.remove();
+        }
     }
 
     @SubscribeEvent
@@ -405,6 +442,7 @@ public class DamageResistanceHandler {
         float[] vals = getDTDR(e, event.getSource(), amount, currentPDT, currentPDR);
         float dt = vals[0] - currentPDT;
         float dr = vals[1] - currentPDR;
+        // vals[2] is GDM — a multiplier, never fully cancels, so not checked here
 
         if ((dt > 0 && dt >= event.getAmount()) || dr >= 1F) {
             event.setCanceled(true);
@@ -418,6 +456,31 @@ public class DamageResistanceHandler {
         if (event.getEntityLiving() instanceof IResistanceProvider irp) {
             irp.onDamageDealt(event.getSource(), event.getAmount());
         }
+    }
+
+    /**
+     * Hard Damage Cap (HDC) enforcement.
+     * Fires at LOWEST priority so it runs after all other damage modifiers.
+     * Only active on the non-SEDNA path (vanilla mobs, other mods).
+     * Caps the final damage amount to the HDC value for the worn set.
+     */
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onEntityDamage(LivingDamageEvent event) {
+        if (isSEDNADamage) return;
+        if (!(event.getEntityLiving() instanceof EntityPlayer)) return;
+        if (!isMobDamageSource(event.getSource())) return;
+
+        mobDamageTarget.set(event.getEntityLiving());
+        float hdc = getHDCFor(event.getEntityLiving());
+        if (hdc <= 0F) return;
+        if (event.getAmount() > hdc) {
+            event.setAmount(hdc);
+        }
+    }
+
+    private static boolean isMobDamageSource(DamageSource source) {
+        Entity attacker = source.getTrueSource();
+        return attacker instanceof EntityLivingBase && !(attacker instanceof EntityPlayer);
     }
 
     private static String typeToCategory(DamageSource source) {
@@ -443,19 +506,41 @@ public class DamageResistanceHandler {
         float[] vals = getDTDR(entity, damage, amount, pierceDT, pierce);
         float dt = vals[0];
         float dr = vals[1];
+        float gdm = vals[2];
 
         dt = Math.max(0F, dt - pierceDT);
         if (dt >= amount) return 0F;
         amount -= dt;
         dr *= MathHelper.clamp(1F - pierce, 0F, 2F /* we allow up to -1 armor piercing, which can double effective armor values */);
 
-        return amount *= (1F - dr);
+        amount *= (1F - dr);
+
+        // GDM is a damage multiplier — amount * gdm = damage that passes through.
+        // gdm of 0 means no set bonus is active; skip to avoid zeroing damage.
+        if (gdm > 0F) amount *= gdm;
+
+        return amount;
+    }
+
+    /**
+     * Returns the Hard Damage Cap for the given entity based on their worn full set.
+     * Only full-set bonuses apply. Returns 0 if no HDC is configured.
+     */
+    public static float getHDCFor(EntityLivingBase entity) {
+        Quartet<Item, Item, Item, Item> wornSet = new Quartet<>(
+                entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD).isEmpty() ? null : entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem(),
+                entity.getItemStackFromSlot(EntityEquipmentSlot.CHEST).isEmpty() ? null : entity.getItemStackFromSlot(EntityEquipmentSlot.CHEST).getItem(),
+                entity.getItemStackFromSlot(EntityEquipmentSlot.LEGS).isEmpty() ? null : entity.getItemStackFromSlot(EntityEquipmentSlot.LEGS).getItem(),
+                entity.getItemStackFromSlot(EntityEquipmentSlot.FEET).isEmpty() ? null : entity.getItemStackFromSlot(EntityEquipmentSlot.FEET).getItem());
+        ResistanceStats setResistance = setStats.get(wornSet);
+        return setResistance != null ? setResistance.hdc : 0F;
     }
 
     private static float[] getDTDR(EntityLivingBase entity, DamageSource damage, float amount, float pierceDT, float pierce) {
 
         float dt = 0;
         float dr = 0;
+        float gdm = 0;
 
         if (entity instanceof IResistanceProvider irp) {
             float[] res = irp.getCurrentDTDR(damage, amount, pierceDT, pierce);
@@ -473,37 +558,82 @@ public class DamageResistanceHandler {
                         entity.getItemStackFromSlot(EntityEquipmentSlot.FEET).getItem());
 
         ResistanceStats setResistance = setStats.get(wornSet);
-        if (setResistance != null) {
-            Resistance res = setResistance.getResistance(damage);
-            if (res != null) {
+
+        if (isSEDNADamage) {
+            // SEDNA path: full normal resistance calculation, GDT/GDM are irrelevant
+            if (setResistance != null) {
+                Resistance res = setResistance.getResistance(damage);
+                if (res != null) {
+                    dt += res.threshold;
+                    dr += res.resistance;
+                }
+            }
+
+            /// ARMOR ///
+            for (EntityEquipmentSlot slot : armorSlots) {
+                ItemStack armor = entity.getItemStackFromSlot(slot);
+                if (armor.isEmpty()) continue;
+                ResistanceStats stats = itemStats.get(armor.getItem());
+                if (stats == null) continue;
+                Resistance res = stats.getResistance(damage);
+                if (res == null) continue;
                 dt += res.threshold;
                 dr += res.resistance;
             }
-        }
 
-        /// ARMOR ///
-        for (EntityEquipmentSlot slot : armorSlots) {
-            ItemStack armor = entity.getItemStackFromSlot(slot);
-            if (armor.isEmpty()) continue;
-            ResistanceStats stats = itemStats.get(armor.getItem());
-            if (stats == null) continue;
-            Resistance res = stats.getResistance(damage);
-            if (res == null) continue;
-            dt += res.threshold;
-            dr += res.resistance;
-        }
+            /// ENTITY CLASS HANDLING ///
+            ResistanceStats innateResistance = entityStats.get(entity.getClass());
+            if (innateResistance != null) {
+                Resistance res = innateResistance.getResistance(damage);
+                if (res != null) {
+                    dt += res.threshold;
+                    dr += res.resistance;
+                }
+            }
+        } else {
+            // Non-SEDNA path (vanilla mob, other mod): PHYS and Other are skipped.
+            // Non-physical categories (EN, FIRE, EXPL) still apply their DR only (no DT).
+            // GDT replaces any threshold reduction; GDM applies as a post-DR multiplier.
+            // Both are set-only bonuses.
+            String category = typeToCategory(damage);
+            boolean isPhysical = CATEGORY_PHYSICAL.equals(category);
 
-        /// ENTITY CLASS HANDLING ///
-        ResistanceStats innateResistance = entityStats.get(entity.getClass());
-        if (innateResistance != null) {
-            Resistance res = innateResistance.getResistance(damage);
-            if (res != null) {
-                dt += res.threshold;
-                dr += res.resistance;
+            if (setResistance != null) {
+                if (!isPhysical) {
+                    // Apply category DR (no DT) for non-physical categories; skip Other
+                    Resistance exactRes = setResistance.exactResistances.get(damage.getDamageType());
+                    if (exactRes != null) {
+                        dr += exactRes.resistance;
+                    } else {
+                        Resistance catRes = setResistance.categoryResistances.get(category);
+                        if (catRes != null) {
+                            dr += catRes.resistance;
+                        }
+                    }
+                }
+                // GDT and GDM from the set (set-only, not per-piece)
+                dt += setResistance.gdt;
+                gdm += setResistance.gdm;
+            }
+
+            /// ENTITY CLASS HANDLING (innate resistances still apply for non-SEDNA) ///
+            ResistanceStats innateResistance = entityStats.get(entity.getClass());
+            if (innateResistance != null) {
+                if (!isPhysical) {
+                    Resistance exactRes = innateResistance.exactResistances.get(damage.getDamageType());
+                    if (exactRes != null) {
+                        dr += exactRes.resistance;
+                    } else {
+                        Resistance catRes = innateResistance.categoryResistances.get(category);
+                        if (catRes != null) {
+                            dr += catRes.resistance;
+                        }
+                    }
+                }
             }
         }
 
-        return new float[]{dt, dr};
+        return new float[]{dt, dr, gdm};
     }
 
     public enum DamageClass {
@@ -515,6 +645,16 @@ public class DamageResistanceHandler {
         HashMap<String, Resistance> exactResistances = new HashMap<>();
         HashMap<String, Resistance> categoryResistances = new HashMap<>();
         Resistance otherResistance;
+        /** General Damage Threshold: flat damage absorbed from non-SEDNA, non-physical sources (set bonus only). */
+        float gdt = 0F;
+        /** General Damage Modifier: damage multiplier applied after category DR for all non-SEDNA sources (set bonus only).
+         *  A value of 0.25 means only 25% of damage passes through (damage *= gdm). */
+        float gdm = 0F;
+        /**
+         * Hard Damage Cap: maximum damage the player can receive from a single non-SEDNA hit (set bonus only).
+         * 0 means no cap. Only applies to the vanilla/other-mod damage path, not SEDNA.
+         */
+        float hdc = 0F;
 
         public static ResistanceStats deserialize(JsonObject json) {
             ResistanceStats stats = new ResistanceStats();
@@ -539,6 +679,10 @@ public class DamageResistanceHandler {
                 JsonArray other = json.get("other").getAsJsonArray();
                 stats.otherResistance = new Resistance(other.get(0).getAsFloat(), other.get(1).getAsFloat());
             }
+
+            if (json.has("gdt")) stats.gdt = json.get("gdt").getAsFloat();
+            if (json.has("gdm")) stats.gdm = json.get("gdm").getAsFloat();
+            if (json.has("hdc")) stats.hdc = json.get("hdc").getAsFloat();
 
             return stats;
         }
@@ -566,6 +710,21 @@ public class DamageResistanceHandler {
             return this;
         }
 
+        ResistanceStats setGDT(float threshold) {
+            this.gdt = threshold;
+            return this;
+        }
+
+        ResistanceStats setGDM(float resistance) {
+            this.gdm = resistance;
+            return this;
+        }
+
+        ResistanceStats setHDC(float minHealth) {
+            this.hdc = minHealth;
+            return this;
+        }
+
         public void serialize(JsonWriter writer) throws IOException {
 
             if (!exactResistances.isEmpty()) {
@@ -590,6 +749,10 @@ public class DamageResistanceHandler {
                 writer.name("other").beginArray().setIndent("");
                 writer.value(otherResistance.threshold).value(otherResistance.resistance).endArray().setIndent("  ");
             }
+
+            if (gdt != 0F) writer.name("gdt").value(gdt);
+            if (gdm != 0F) writer.name("gdm").value(gdm);
+            if (hdc != 0F) writer.name("hdc").value(hdc);
         }
     }
 
