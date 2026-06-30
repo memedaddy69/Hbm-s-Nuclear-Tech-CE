@@ -8,6 +8,7 @@ import com.hbm.explosion.vanillant.interfaces.IEntityProcessor;
 import com.hbm.explosion.vanillant.interfaces.IEntityRangeMutator;
 import com.hbm.interfaces.NotableComments;
 import com.hbm.lib.ForgeDirection;
+import com.hbm.util.EntityDamageUtil;
 import net.minecraft.enchantment.EnchantmentProtection;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -18,6 +19,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
+import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraftforge.event.ForgeEventFactory;
 
 import java.util.HashMap;
@@ -174,18 +176,39 @@ public class EntityProcessorCross implements IEntityProcessor {
 	}
 
     public void attackEntity(Entity entity, ExplosionVNT source, float amount) {
-		entity.attackEntityFrom(setExplosionSource(source.compat), amount);
-	}
+        DamageSource dmgSource = setExplosionSource(source);
+        if (entity instanceof EntityLivingBase living) {
+            EntityDamageUtil.attackEntityFromNT(living, dmgSource, amount, false, true, 0, 0, 0);
+        } else {
+            entity.attackEntityFrom(dmgSource, amount);
+        }
+    }
 
 	public float calculateDamage(double distanceScaled, double density, double knockback, float size) {
 		return (float) ((int) ((knockback * knockback + knockback) / 2.0D * 8.0D * size + 1.0D));
 	}
 
-	public static DamageSource setExplosionSource(Explosion explosion) {
-		return explosion != null && explosion.getExplosivePlacedBy() != null ?
-				(new EntityDamageSource("explosion.player", explosion.getExplosivePlacedBy())).setExplosion() :
-				(new DamageSource("explosion")).setExplosion();
-	}
+    public static DamageSource setExplosionSource(ExplosionVNT explosion) {
+        if (explosion == null) {
+            return (new DamageSource("explosion")).setExplosion();
+        }
+
+        // The artillery shell / HIMARS rocket
+        Entity immediateSource = explosion.exploder;
+        // The player who fired it
+        EntityLivingBase trueSource = explosion.compat != null ? explosion.compat.getExplosivePlacedBy() : null;
+
+        if (immediateSource != null && trueSource != null) {
+            // Preserves both the shell and the player for in-mod damage processing
+            return (new EntityDamageSourceIndirect("explosion.player", immediateSource, trueSource)).setExplosion();
+        } else if (trueSource != null) {
+            return (new EntityDamageSource("explosion.player", trueSource)).setExplosion();
+        } else if (immediateSource != null) {
+            return (new EntityDamageSource("explosion", immediateSource)).setExplosion();
+        } else {
+            return (new DamageSource("explosion")).setExplosion();
+        }
+    }
 
 	public EntityProcessorCross withRangeMod(float mod) {
         range = (_, range) -> range * mod;
