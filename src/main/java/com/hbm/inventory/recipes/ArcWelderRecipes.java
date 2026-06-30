@@ -42,13 +42,6 @@ public class ArcWelderRecipes extends SerializableRecipe {
             new OreDictStack(MINGRADE.wireDense(), 2)));
     recipes.add(
         new ArcWelderRecipe(
-            new ItemStack(ModItems.neutron_reflector, 2),
-            400,
-            50_000L,
-            new OreDictStack(WC.ingot(), 2),
-            new OreDictStack(DURA.plate())));
-    recipes.add(
-        new ArcWelderRecipe(
             DictFrame.fromOne(ModItems.part_generic, EnumPartType.LDE),
             200,
             5_000L,
