@@ -30,6 +30,7 @@ import com.hbm.particle.helper.HbmEffectNT;
 import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.util.BufferUtil;
 import com.hbm.util.CompatExternal;
+import com.hbm.util.EntityDamageUtil;
 import com.hbm.util.Vec3NT;
 import io.netty.buffer.ByteBuf;
 import li.cil.oc.api.machine.Arguments;
@@ -504,7 +505,7 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 			}
 		}
 
-		this.target = target;
+		this.target = EntityDamageUtil.unwrapMultiPart(target);
 
 		if(target != null)
 			this.tPos = this.getEntityPos(this.target);
