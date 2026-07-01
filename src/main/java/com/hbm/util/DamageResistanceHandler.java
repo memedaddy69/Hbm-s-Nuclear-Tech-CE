@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map.Entry;
+import java.util.WeakHashMap;
 
 /**
  * Basic handling/registry class for our custom resistance stats.
@@ -68,6 +69,66 @@ public class DamageResistanceHandler {
      */
     public static boolean isSEDNADamage = false;
     private static final ThreadLocal<EntityLivingBase> mobDamageTarget = new ThreadLocal<>();
+
+    /**
+     * Tracks per-player, per-tick health floors set when the HDC is triggered.
+     * Key: the player entity (weak so dead/unloaded players don't leak).
+     * Value: [tickCount, healthFloor]
+     *   - tickCount: the server tick when the floor was established.
+     *   - healthFloor: health must not drop below this value for the rest of that tick.
+     *
+     * Applies to both HDC (hard cap) and regular-damage paths — any source that tries
+     * to lower the player's health below the floor in the same tick is blocked.
+     * This includes direct setHealth calls from potion effects (e.g. SRP needler).
+     */
+    private static final WeakHashMap<EntityPlayer, long[]> hdcTickFloor = new WeakHashMap<>();
+
+    /**
+     * Called by the mixin (and the event handler) to query whether a proposed health
+     * value is allowed this tick.  Returns the clamped (allowed) health value.
+     *
+     * If the player has an active HDC floor for the current tick and {@code proposedHealth}
+     * would drop below it, the floor value is returned instead (blocking further damage).
+     * Otherwise {@code proposedHealth} is returned unchanged.
+     *
+     * @param player         the player whose health is being set
+     * @param proposedHealth the new health value requested by some damage source
+     * @return the health value that should actually be applied
+     */
+    public static float applyHDCFloor(EntityPlayer player, float proposedHealth) {
+        long[] state = hdcTickFloor.get(player);
+        if (state == null) return proposedHealth;
+        long currentTick = player.world.getTotalWorldTime();
+        if (state[0] != currentTick) {
+            // Floor expired — different tick.
+            hdcTickFloor.remove(player);
+            return proposedHealth;
+        }
+        float floor = Float.intBitsToFloat((int) state[1]);
+        return Math.max(proposedHealth, floor);
+    }
+
+    /**
+     * Establishes (or tightens) the HDC health floor for the given player on the current tick.
+     * If a floor already exists for this tick and the new floor is higher (i.e. stricter),
+     * it replaces the old one.
+     *
+     * @param player      the player
+     * @param healthFloor minimum health allowed for the rest of this tick
+     */
+    public static void setHDCFloor(EntityPlayer player, float healthFloor) {
+        long currentTick = player.world.getTotalWorldTime();
+        long[] existing = hdcTickFloor.get(player);
+        if (existing != null && existing[0] == currentTick) {
+            float existingFloor = Float.intBitsToFloat((int) existing[1]);
+            // Only tighten: keep the higher floor (more health = more protection)
+            if (healthFloor > existingFloor) {
+                existing[1] = Float.floatToRawIntBits(healthFloor);
+            }
+        } else {
+            hdcTickFloor.put(player, new long[]{currentTick, Float.floatToRawIntBits(healthFloor)});
+        }
+    }
 
     public static void init() {
         File folder = MainRegistry.configHbmDir;
@@ -477,20 +538,47 @@ public class DamageResistanceHandler {
      * Hard Damage Cap (HDC) enforcement.
      * Fires at LOWEST priority so it runs after all other damage modifiers.
      * Only active on the non-SEDNA path (vanilla mobs, other mods).
-     * Caps the final damage amount to the HDC value for the worn set.
+     * Caps the final damage amount to the HDC value for the worn set, and
+     * records a per-tick health floor so that subsequent setHealth calls
+     * (e.g. from potion effects like SRP's needler) cannot drain more than
+     * HDC points of health in total during the same tick.
      */
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onEntityDamage(LivingDamageEvent event) {
         if (isSEDNADamage) return;
-        if (!(event.getEntityLiving() instanceof EntityPlayer)) return;
+        if (!(event.getEntityLiving() instanceof EntityPlayer player)) return;
         if (!isMobDamageSource(event.getSource())) return;
 
-        mobDamageTarget.set(event.getEntityLiving());
-        float hdc = getHDCFor(event.getEntityLiving());
+        mobDamageTarget.set(player);
+        float hdc = getHDCFor(player);
+
+        // Always check if there is already a tick floor active — even before HDC kicks in.
+        // This blocks any regular damage that arrives after the cap was already hit this tick.
+        float currentHealth = player.getHealth();
+        long[] existingFloor = hdcTickFloor.get(player);
+        if (existingFloor != null && existingFloor[0] == player.world.getTotalWorldTime()) {
+            float floor = Float.intBitsToFloat((int) existingFloor[1]);
+            float maxAllowed = currentHealth - floor;
+            if (maxAllowed <= 0F) {
+                event.setAmount(0F);
+                event.setCanceled(true);
+                return;
+            }
+            if (event.getAmount() > maxAllowed) {
+                event.setAmount(maxAllowed);
+                // Floor stays the same (will hit exactly the floor after this hit)
+            }
+            return;
+        }
+
         if (hdc <= 0F) return;
         if (event.getAmount() > hdc) {
             event.setAmount(hdc);
         }
+        // Record the health floor: after this hit lands, health will be currentHealth - hdc.
+        // Any further setHealth calls that tick must respect this floor.
+        float floorAfterHit = currentHealth - hdc;
+        setHDCFloor(player, floorAfterHit);
     }
 
     private static boolean isMobDamageSource(DamageSource source) {
