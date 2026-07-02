@@ -136,7 +136,11 @@ public class ItemGrenadeFilling extends ItemEnumMulti<ItemGrenadeFilling.EnumGre
 
     public static final Consumer<EntityGrenadeUniversal> EXPLODE_INC = grenade -> {
         World world = grenade.world;
-        standardExplode(grenade, 3F, 10F);
+        ExplosionVNT vnt = new ExplosionVNT(world, grenade.posX, grenade.posY, grenade.posZ, 3F, grenade.getThrower());
+        vnt.setEntityProcessor(new EntityProcessorCrossSmooth(1, 10F).setDamageClass(DamageClass.FIRE));
+        vnt.setPlayerProcessor(new PlayerProcessorStandard());
+        vnt.setSFX(new ExplosionEffectWeapon(10, 2.5F, 1F));
+        vnt.explode();
         EntityFireLingering fire = new EntityFireLingering(world).setArea(6, 2).setDuration(200).setType(EntityFireLingering.TYPE_DIESEL);
         fire.setPosition(grenade.posX, grenade.posY, grenade.posZ);
         world.spawnEntity(fire);
@@ -145,7 +149,11 @@ public class ItemGrenadeFilling extends ItemEnumMulti<ItemGrenadeFilling.EnumGre
 
     public static final Consumer<EntityGrenadeUniversal> EXPLODE_WP = grenade -> {
         World world = grenade.world;
-        standardExplode(grenade, 3F, 10F);
+        ExplosionVNT vnt = new ExplosionVNT(world, grenade.posX, grenade.posY, grenade.posZ, 3F, grenade.getThrower());
+        vnt.setEntityProcessor(new EntityProcessorCrossSmooth(1, 10F).setDamageClass(DamageClass.FIRE));
+        vnt.setPlayerProcessor(new PlayerProcessorStandard());
+        vnt.setSFX(new ExplosionEffectWeapon(10, 2.5F, 1F));
+        vnt.explode();
         EntityFireLingering fire = new EntityFireLingering(world).setArea(6, 2).setDuration(600).setType(EntityFireLingering.TYPE_PHOSPHORUS);
         fire.setPosition(grenade.posX, grenade.posY, grenade.posZ);
         world.spawnEntity(fire);

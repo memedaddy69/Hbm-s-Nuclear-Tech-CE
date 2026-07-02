@@ -42,8 +42,17 @@ public class EntityProcessorCrossSmooth extends EntityProcessorCross {
         if (!(entity instanceof EntityLivingBase)) {
             entity.attackEntityFrom(dmg, amount);
         } else {
-            EntityDamageUtil.attackEntityFromNT((EntityLivingBase) entity, dmg, amount, true, false, 0F, pierceDT, pierceDR);
-            if (!entity.isEntityAlive()) ConfettiUtil.decideConfetti((EntityLivingBase) entity, dmg);
+            EntityLivingBase living = (EntityLivingBase) entity;
+            if (clazz == DamageClass.FIRE) {
+                EntityLivingBase trueAttacker = source.compat != null ? source.compat.getExplosivePlacedBy() : null;
+                if (trueAttacker == null && source.exploder instanceof EntityLivingBase) {
+                    trueAttacker = (EntityLivingBase) source.exploder;
+                }
+                EntityDamageUtil.attackEntityFromNTUsingVanillaSource(living, DamageSource.ON_FIRE, trueAttacker, amount, true, false, 0F, pierceDT, pierceDR, false);
+            } else {
+                EntityDamageUtil.attackEntityFromNT(living, dmg, amount, true, false, 0F, pierceDT, pierceDR);
+            }
+            if (!living.isEntityAlive()) ConfettiUtil.decideConfetti(living, dmg);
         }
     }
 
