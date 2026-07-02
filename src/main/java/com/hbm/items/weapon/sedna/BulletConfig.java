@@ -120,7 +120,13 @@ public class BulletConfig implements Cloneable {
             EntityLivingBase living = (EntityLivingBase) entity;
             float prevHealth = living.getHealth();
 
-            EntityDamageUtil.attackEntityFromNT(living, source, intendedDamage, true, true, bullet.config.knockbackMult, bullet.config.armorThresholdNegation, bullet.config.armorPiercingPercent);
+            if (bullet.config.dmgClass == DamageResistanceHandler.DamageClass.FIRE) {
+                // Use vanilla ON_FIRE source so third-party mods that check for exact vanilla
+                // fire damage (SRP / WoN) will detect the hit, while still applying SEDNA reductions.
+                EntityDamageUtil.attackEntityFromNTUsingVanillaSource(living, DamageSource.ON_FIRE, bullet.getThrower(), intendedDamage, true, true, bullet.config.knockbackMult, bullet.config.armorThresholdNegation, bullet.config.armorPiercingPercent, bullet.config.bypassVanillaArmor);
+            } else {
+                EntityDamageUtil.attackEntityFromNT(living, source, intendedDamage, true, true, bullet.config.knockbackMult, bullet.config.armorThresholdNegation, bullet.config.armorPiercingPercent, bullet.config.bypassVanillaArmor);
+            }
 
             float newHealth = living.getHealth();
 
@@ -148,7 +154,11 @@ public class BulletConfig implements Cloneable {
             }
 
             EntityLivingBase living = (EntityLivingBase) entity;
-            EntityDamageUtil.attackEntityFromNT(living, source, bullet.damage, true, true, bullet.config.knockbackMult, bullet.config.armorThresholdNegation, bullet.config.armorPiercingPercent);
+            if (bullet.config.dmgClass == DamageResistanceHandler.DamageClass.FIRE) {
+                EntityDamageUtil.attackEntityFromNTUsingVanillaSource(living, DamageSource.ON_FIRE, bullet.getThrower(), bullet.damage, true, true, bullet.config.knockbackMult, bullet.config.armorThresholdNegation, bullet.config.armorPiercingPercent, bullet.config.bypassVanillaArmor);
+            } else {
+                EntityDamageUtil.attackEntityFromNT(living, source, bullet.damage, true, true, bullet.config.knockbackMult, bullet.config.armorThresholdNegation, bullet.config.armorPiercingPercent, bullet.config.bypassVanillaArmor);
+            }
             if (!living.isEntityAlive()) ConfettiUtil.decideConfetti(living, source);
         }
     };
@@ -209,6 +219,13 @@ public class BulletConfig implements Cloneable {
      * Whether projectiles ignore blocks entirely
      */
     public boolean isSpectral = false;
+    /**
+     * When true, vanilla armor value is bypassed (getTotalArmorValue / armor toughness are ignored),
+     * but SEDNA DT/DR resistances registered on armor sets still apply normally.
+     * Intended for fire-type projectiles that should burn through unprotected flesh
+     * but still respect purpose-built heat-resistant SEDNA suits.
+     */
+    public boolean bypassVanillaArmor = false;
     public int selfDamageDelay = 2;
     public boolean blackPowder = false;
     public boolean renderRotations = true;
@@ -393,6 +410,15 @@ public class BulletConfig implements Cloneable {
 
     public BulletConfig setSpectral(boolean spectral) {
         this.isSpectral = spectral;
+        return this;
+    }
+
+    /**
+     * When true, the projectile bypasses vanilla armor (armor value + toughness) on hit.
+     * SEDNA DT/DR resistances on armor sets still apply.
+     */
+    public BulletConfig setBypassVanillaArmor(boolean bypass) {
+        this.bypassVanillaArmor = bypass;
         return this;
     }
 

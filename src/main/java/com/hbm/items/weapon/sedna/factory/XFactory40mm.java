@@ -94,7 +94,11 @@ public class XFactory40mm {
     public static void spawnFire(EntityBulletBaseMK4 bullet, RayTraceResult mop, boolean phosphorus, int duration) {
         if(mop.typeOfHit == mop.typeOfHit.ENTITY && bullet.ticksExisted < 3 && mop.entityHit == bullet.getThrower()) return;
         World world = bullet.world;
-        Lego.standardExplode(bullet, mop, 3F);
+        ExplosionVNT vnt = new ExplosionVNT(world, mop.hitVec.x, mop.hitVec.y, mop.hitVec.z, 3F, bullet.getThrower());
+        vnt.setEntityProcessor(new EntityProcessorCrossSmooth(1, bullet.damage).setDamageClass(DamageResistanceHandler.DamageClass.FIRE).setupPiercing(bullet.config.armorThresholdNegation, bullet.config.armorPiercingPercent));
+        vnt.setPlayerProcessor(new PlayerProcessorStandard());
+        vnt.setSFX(new ExplosionEffectWeapon(10, 2.5F, 1F));
+        vnt.explode();
         EntityFireLingering fire = new EntityFireLingering(world).setArea(5, 2).setDuration(duration).setType(phosphorus ? EntityFireLingering.TYPE_PHOSPHORUS : EntityFireLingering.TYPE_DIESEL);
         fire.setPosition(mop.hitVec.x, mop.hitVec.y, mop.hitVec.z);
         world.spawnEntity(fire);
