@@ -203,43 +203,43 @@ public class DamageResistanceHandler {
         itemStats.put(ModItems.jackt2, new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 5F, 0.5F));
 
         registerSet(ModItems.steel_helmet, ModItems.steel_plate, ModItems.steel_legs, ModItems.steel_boots,
-                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 2F, 0.1F).setGDM(0.85F).setGDT(2.0F));
+                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 2F, 0.1F).setGDM(0.85F));
         registerSet(ModItems.titanium_helmet, ModItems.titanium_plate, ModItems.titanium_legs, ModItems.titanium_boots,
-                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 3F, 0.1F).setGDM(0.8F).setGDT(3.0F));
+                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 3F, 0.1F).setGDM(0.8F));
         registerSet(ModItems.alloy_helmet, ModItems.alloy_plate, ModItems.alloy_legs, ModItems.alloy_boots,
                 new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 2F, 0.1F));
         registerSet(ModItems.cobalt_helmet, ModItems.cobalt_plate, ModItems.cobalt_legs, ModItems.cobalt_boots,
-                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 2F, 0.1F).setGDM(0.75F).setGDT(2.0F));
+                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 2F, 0.1F).setGDM(0.75F));
         registerSet(ModItems.starmetal_helmet, ModItems.starmetal_plate, ModItems.starmetal_legs, ModItems.starmetal_boots,
-                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 3F, 0.25F).setOther(1F, 0.1F).setGDM(0.5F).setGDT(3.0F).setHDC(25F));
+                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 3F, 0.25F).setOther(1F, 0.1F).setGDM(0.5F).setHDC(25F));
         registerSet(null, null, ModItems.zirconium_legs, null, new ResistanceStats()
                 .setOther(0F, 1F)); //What?
                          //MetalloloM: *Yes*
         registerSet(ModItems.dnt_helmet, ModItems.dnt_plate, ModItems.dnt_legs, ModItems.dnt_boots,
                 new ResistanceStats().setGDM(0.001F).setHDC(5F));
         registerSet(ModItems.cmb_helmet, ModItems.cmb_plate, ModItems.cmb_legs, ModItems.cmb_boots,
-                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 5F, 0.5F).setOther(5F, 0.25F).setGDM(0.5F).setGDT(5.0F).setHDC(18.0F));
+                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 5F, 0.5F).setOther(5F, 0.25F).setGDM(0.5F).setHDC(18.0F));
         registerSet(ModItems.schrabidium_helmet, ModItems.schrabidium_plate, ModItems.schrabidium_legs, ModItems.schrabidium_boots,
-                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 10F, 0.65F).setOther(5F, 0.5F).setGDM(0.1F).setGDT(16.0F).setHDC(4.0F));
+                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 10F, 0.65F).setOther(5F, 0.5F).setGDM(0.1F).setHDC(4.0F));
         registerSet(ModItems.robes_helmet, ModItems.robes_plate, ModItems.robes_legs, ModItems.robes_boots, new ResistanceStats());
 
         registerSet(ModItems.security_helmet, ModItems.security_plate, ModItems.security_legs, ModItems.security_boots,
-                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 5F, 0.5F).addCategory(CATEGORY_EXPLOSION, 2F, 0.25F).setGDM(0.5F).setGDT(5.0F));
+                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 5F, 0.5F).addCategory(CATEGORY_EXPLOSION, 2F, 0.25F).setGDM(0.5F));
         registerSet(ModItems.steamsuit_helmet, ModItems.steamsuit_plate, ModItems.steamsuit_legs, ModItems.steamsuit_boots,
-                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 2F, 0.15F).addCategory(CATEGORY_FIRE, 0.5F, 0.25F).addExact(DamageSource.FALL.getDamageType(), 5F, 0.25F).setOther(0F, 0.1F).setGDM(0.5F).setGDT(3.0F).setHDC(25F));
+                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 2F, 0.15F).addCategory(CATEGORY_FIRE, 0.5F, 0.25F).addExact(DamageSource.FALL.getDamageType(), 5F, 0.25F).setOther(0F, 0.1F).setGDM(0.5F).setHDC(25F));
         registerSet(ModItems.dieselsuit_helmet, ModItems.dieselsuit_plate, ModItems.dieselsuit_legs, ModItems.dieselsuit_boots, new
         ResistanceStats()
                 .addCategory(CATEGORY_PHYSICAL, 1F, 0.15F)
                 .addCategory(CATEGORY_FIRE, 0.5F, 0.5F)
                 .addCategory(CATEGORY_EXPLOSION, 2F, 0.15F)
                 .setOther(0F, 0.1F)
-                .setGDM(0.5F).setGDT(2.0F).setHDC(25F));
+                .setGDM(0.5F).setHDC(25F));
         registerSet(ModItems.ajr_helmet, ModItems.ajr_plate, ModItems.ajr_legs, ModItems.ajr_boots,
-                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 4F, 0.15F).addCategory(CATEGORY_FIRE, 0.5F, 0.35F).addCategory(CATEGORY_EXPLOSION, 7.5F, 0.25F).addExact(DamageSource.FALL.getDamageType(), 0F, 1F).setOther(0F, 0.15F).setGDM(0.25F).setGDT(6.0F).setHDC(12.0F));
+                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 4F, 0.15F).addCategory(CATEGORY_FIRE, 0.5F, 0.35F).addCategory(CATEGORY_EXPLOSION, 7.5F, 0.25F).addExact(DamageSource.FALL.getDamageType(), 0F, 1F).setOther(0F, 0.15F).setGDM(0.25F).setHDC(12.0F));
         registerSet(ModItems.ajro_helmet, ModItems.ajro_plate, ModItems.ajro_legs, ModItems.ajro_boots,
-                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 4F, 0.15F).addCategory(CATEGORY_FIRE, 0.5F, 0.35F).addCategory(CATEGORY_EXPLOSION, 7.5F, 0.25F).addExact(DamageSource.FALL.getDamageType(), 0F, 1F).setOther(0F, 0.15F).setGDM(0.25F).setGDT(6.0F).setHDC(12.0F));
+                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 4F, 0.15F).addCategory(CATEGORY_FIRE, 0.5F, 0.35F).addCategory(CATEGORY_EXPLOSION, 7.5F, 0.25F).addExact(DamageSource.FALL.getDamageType(), 0F, 1F).setOther(0F, 0.15F).setGDM(0.25F).setHDC(12.0F));
         registerSet(ModItems.rpa_helmet, ModItems.rpa_plate, ModItems.rpa_legs, ModItems.rpa_boots,
-                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 25F, 0.65F).addCategory(CATEGORY_FIRE, 10F, 0.9F).addCategory(CATEGORY_EXPLOSION, 15F, 0.25F).addCategory(CATEGORY_ENERGY, 25F, 0.75F).addExact(DamageSource.FALL.getDamageType(), 0F, 1F).addExact(DamageClass.LASER.name(), 10F, 0.75F).setOther(15F, 0.3F).setGDM(0.1F).setGDT(20.0F).setHDC(4.0F));
+                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 25F, 0.65F).addCategory(CATEGORY_FIRE, 10F, 0.9F).addCategory(CATEGORY_EXPLOSION, 15F, 0.25F).addCategory(CATEGORY_ENERGY, 25F, 0.75F).addExact(DamageSource.FALL.getDamageType(), 0F, 1F).addExact(DamageClass.LASER.name(), 10F, 0.75F).setOther(15F, 0.3F).setGDM(0.1F).setHDC(4.0F));
         registerSet(ModItems.ncrpa_helmet, ModItems.ncrpa_plate, ModItems.ncrpa_legs, ModItems.ncrpa_boots, new ResistanceStats()
                 .addCategory(CATEGORY_PHYSICAL, 25F, 0.65F)
                 .addCategory(CATEGORY_FIRE, 10F, 0.9F)
@@ -247,9 +247,9 @@ public class DamageResistanceHandler {
                 .addCategory(CATEGORY_ENERGY, 10F, 0.5F)
                 .addExact(DamageSource.FALL.damageType, 0F, 1F)
                 .setOther(15F, 0.25F)
-                .setGDM(0.1F).setGDT(25.0F).setHDC(4.0F));
+                .setGDM(0.1F).setHDC(4.0F));
         ResistanceStats bj =
-                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 5F, 0.5F).addCategory(CATEGORY_FIRE, 2.5F, 0.5F).addCategory(CATEGORY_EXPLOSION, 10F, 0.25F).addExact(DamageSource.FALL.getDamageType(), 0F, 1F).setOther(2F, 0.15F).setGDM(0.15F).setGDT(10.0F).setHDC(6.0F);
+                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 5F, 0.5F).addCategory(CATEGORY_FIRE, 2.5F, 0.5F).addCategory(CATEGORY_EXPLOSION, 10F, 0.25F).addExact(DamageSource.FALL.getDamageType(), 0F, 1F).setOther(2F, 0.15F).setGDM(0.15F).setHDC(6.0F);
         registerSet(ModItems.bj_helmet, ModItems.bj_plate, ModItems.bj_legs, ModItems.bj_boots, bj);
         registerSet(ModItems.bj_helmet, ModItems.bj_plate_jetpack, ModItems.bj_legs, ModItems.bj_boots, bj);
         registerSet(ModItems.envsuit_helmet, ModItems.envsuit_plate, ModItems.envsuit_legs, ModItems.envsuit_boots, new ResistanceStats()
@@ -257,18 +257,18 @@ public class DamageResistanceHandler {
                 .addExact(DamageSource.DROWN.getDamageType(), 0F, 1F)
                 .addExact(DamageSource.FALL.getDamageType(), 5F, 0.75F)
                 .setOther(0F, 0.1F)
-                .setGDM(0.75F).setGDT(3.0F));
+                .setGDM(0.75F));
         registerSet(ModItems.hev_helmet, ModItems.hev_plate, ModItems.hev_legs, ModItems.hev_boots,
-                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 2F, 0.25F).addCategory(CATEGORY_FIRE, 0.5F, 0.5F).addCategory(CATEGORY_EXPLOSION, 5F, 0.25F).addExact(DamageSource.ON_FIRE.getDamageType(), 0F, 1F).addExact(DamageSource.FALL.getDamageType(), 10F, 0F).setOther(2F, 0.25F).setGDM(0.2F).setGDT(8.0F).setHDC(8.0F));
+                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 2F, 0.25F).addCategory(CATEGORY_FIRE, 0.5F, 0.5F).addCategory(CATEGORY_EXPLOSION, 5F, 0.25F).addExact(DamageSource.ON_FIRE.getDamageType(), 0F, 1F).addExact(DamageSource.FALL.getDamageType(), 10F, 0F).setOther(2F, 0.25F).setGDM(0.2F).setHDC(8.0F));
         registerSet(ModItems.bismuth_helmet, ModItems.bismuth_plate, ModItems.bismuth_legs, ModItems.bismuth_boots, new ResistanceStats()
                 .addCategory(CATEGORY_PHYSICAL, 2F, 0.15F)
                 .addCategory(CATEGORY_FIRE, 5F, 0.5F)
                 .addCategory(CATEGORY_EXPLOSION, 5F, 0.25F)
                 .addExact(DamageSource.FALL.getDamageType(), 0F, 1F)
                 .setOther(2F, 0.25F)
-                .setGDM(0.5F).setGDT(2.0F).setHDC(20F));
+                .setGDM(0.5F).setHDC(20F));
         registerSet(ModItems.fau_helmet, ModItems.fau_plate, ModItems.fau_legs, ModItems.fau_boots,
-                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 100F, 0.99F).addCategory(CATEGORY_EXPLOSION, 50F, 0.95F).addCategory(CATEGORY_FIRE, 100F, 1F).addExact(DamageClass.LASER.name(), 25F, 0.95F).addExact(DamageSource.FALL.getDamageType(), 0F, 1F).setOther(100F, 0.99F).setGDM(0.05F).setGDT(5.0F).setHDC(4.0F));
+                new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 100F, 0.99F).addCategory(CATEGORY_EXPLOSION, 50F, 0.95F).addCategory(CATEGORY_FIRE, 100F, 1F).addExact(DamageClass.LASER.name(), 25F, 0.95F).addExact(DamageSource.FALL.getDamageType(), 0F, 1F).setOther(100F, 0.99F).setGDM(0.05F).setHDC(4.0F));
         registerSet(ModItems.dns_helmet, ModItems.dns_plate, ModItems.dns_legs, ModItems.dns_boots,
                 new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 1000F, 1F).addCategory(CATEGORY_EXPLOSION, 100F, 0.99F).addCategory(CATEGORY_FIRE, 0F, 1F).setOther(1000F, 1F));
         registerSet(ModItems.taurun_helmet, ModItems.taurun_plate, ModItems.taurun_legs, ModItems.taurun_boots, new ResistanceStats()
@@ -277,14 +277,14 @@ public class DamageResistanceHandler {
                 .addCategory(CATEGORY_EXPLOSION, 0F, 0.25F)
                 .addExact(DamageSource.FALL.getDamageType(), 4F, 0.5F)
                 .setOther(2F, 0.1F)
-                .setGDM(0.5F).setGDT(2.0F).setHDC(20F));
+                .setGDM(0.5F).setHDC(20F));
         registerSet(ModItems.t51_helmet, ModItems.t51_plate, ModItems.t51_legs, ModItems.t51_boots, new ResistanceStats()
                 .addCategory(CATEGORY_PHYSICAL, 2F, 0.15F)
                 .addCategory(CATEGORY_FIRE, 0.5F, 0.35F)
                 .addCategory(CATEGORY_EXPLOSION, 5F, 0.25F)
                 .addExact(DamageSource.FALL.damageType, 0F, 1F)
                 .setOther(0F, 0.1F)
-                .setGDM(0.5F).setGDT(4.0F).setHDC(20.0F));
+                .setGDM(0.5F).setHDC(20.0F));
         registerSet(ModItems.trenchmaster_helmet, ModItems.trenchmaster_plate, ModItems.trenchmaster_legs, ModItems.trenchmaster_boots, new
         ResistanceStats()
                 .addCategory(CATEGORY_PHYSICAL, 5F, 0.5F)
@@ -293,7 +293,7 @@ public class DamageResistanceHandler {
                 .addExact(DamageClass.LASER.name(), 15F, 0.9F)
                 .addExact(DamageSource.FALL.getDamageType(), 10F, 0.5F)
                 .setOther(5F, 0.25F)
-                .setGDM(0.15F).setGDT(8.0F).setHDC(6.0F));
+                .setGDM(0.15F).setHDC(6.0F));
 
         registerSet(ModItems.euphemium_helmet, ModItems.euphemium_plate, ModItems.euphemium_legs, ModItems.euphemium_boots,
                 new ResistanceStats().setOther(1_000_000F, 1F));
@@ -350,8 +350,6 @@ public class DamageResistanceHandler {
                 }
                 if (stats.otherResistance != null)
                     toAdd.add(I18nUtil.resolveKey("damage.other") + ": " + stats.otherResistance.threshold + "/" + ((int) (stats.otherResistance.resistance * 100)) + "%");
-                if (stats.gdt != 0F)
-                    toAdd.add(I18nUtil.resolveKey("damage.gdt") + ": " + stats.gdt);
                 if (stats.gdm != 0F)
                     toAdd.add(I18nUtil.resolveKey("damage.gdm") + ": x" + stats.gdm);
                 if (stats.hdc != 0F)
@@ -730,8 +728,7 @@ public class DamageResistanceHandler {
                         }
                     }
                 }
-                // GDT and GDM from the set (set-only, not per-piece)
-                dt += setResistance.gdt;
+                // GDM from the set (set-only, not per-piece)
                 gdm += setResistance.gdm;
             }
 
@@ -764,8 +761,6 @@ public class DamageResistanceHandler {
         HashMap<String, Resistance> exactResistances = new HashMap<>();
         HashMap<String, Resistance> categoryResistances = new HashMap<>();
         Resistance otherResistance;
-        /** General Damage Threshold: flat damage absorbed from non-SEDNA, non-physical sources (set bonus only). */
-        float gdt = 0F;
         /** General Damage Modifier: damage multiplier applied after category DR for all non-SEDNA sources (set bonus only).
          *  A value of 0.25 means only 25% of damage passes through (damage *= gdm). */
         float gdm = 0F;
@@ -799,7 +794,6 @@ public class DamageResistanceHandler {
                 stats.otherResistance = new Resistance(other.get(0).getAsFloat(), other.get(1).getAsFloat());
             }
 
-            if (json.has("gdt")) stats.gdt = json.get("gdt").getAsFloat();
             if (json.has("gdm")) stats.gdm = json.get("gdm").getAsFloat();
             if (json.has("hdc")) stats.hdc = json.get("hdc").getAsFloat();
 
@@ -826,11 +820,6 @@ public class DamageResistanceHandler {
 
         ResistanceStats setOther(float threshold, float resistance) {
             otherResistance = new Resistance(threshold, resistance);
-            return this;
-        }
-
-        ResistanceStats setGDT(float threshold) {
-            this.gdt = threshold;
             return this;
         }
 
@@ -869,7 +858,6 @@ public class DamageResistanceHandler {
                 writer.value(otherResistance.threshold).value(otherResistance.resistance).endArray().setIndent("  ");
             }
 
-            if (gdt != 0F) writer.name("gdt").value(gdt);
             if (gdm != 0F) writer.name("gdm").value(gdm);
             if (hdc != 0F) writer.name("hdc").value(hdc);
         }
@@ -886,3 +874,4 @@ public class DamageResistanceHandler {
         }
     }
 }
+

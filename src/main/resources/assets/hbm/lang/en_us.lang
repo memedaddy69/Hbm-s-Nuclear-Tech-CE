@@ -1144,7 +1144,6 @@ damage.exact.onFire=Afterburn
 damage.inset=Resistances when worn in set:
 damage.item=Resistances when worn:
 damage.other=Other
-damage.gdt=General Damage Threshold
 damage.gdm=General Damage Reduction
 damage.hdc=Max Hit Damage
 death.attack.acid=%1$s fell into acid
