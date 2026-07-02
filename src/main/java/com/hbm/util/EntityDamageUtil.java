@@ -93,11 +93,18 @@ public class EntityDamageUtil {
     }
 
     public static boolean attackEntityFromNT(EntityLivingBase living, DamageSource source, float amount, boolean ignoreIFrame, boolean allowSpecialCancel, double knockbackMultiplier, float pierceDT, float pierce) {
+        return attackEntityFromNT(living, source, amount, ignoreIFrame, allowSpecialCancel, knockbackMultiplier, pierceDT, pierce, false);
+    }
+
+    public static boolean attackEntityFromNT(EntityLivingBase living, DamageSource source, float amount, boolean ignoreIFrame, boolean allowSpecialCancel, double knockbackMultiplier, float pierceDT, float pierce, boolean bypassVanillaArmor) {
         if (living instanceof EntityPlayerMP playerMP && source.getTrueSource() instanceof EntityPlayer attacker) {
             if (!playerMP.canAttackPlayer(attacker))
                 return false; //handles wack-ass no PVP rule as well as scoreboard friendly fire
         }
-        DamageResistanceHandler.setup(pierceDT, pierce);
+        // Reset iFrames before the 0-damage pre-call so vanilla's bookkeeping cannot
+        // re-arm the invulnerability timer between the pre-call and the real hit.
+        if (ignoreIFrame) { living.lastDamage = 0F; living.hurtResistantTime = 0; }
+        DamageResistanceHandler.setup(pierceDT, pierce, bypassVanillaArmor);
         living.attackEntityFrom(source, 0F);
         try {
             return attackEntityFromNTInternal(living, source, amount, ignoreIFrame, allowSpecialCancel, knockbackMultiplier);
@@ -224,7 +231,10 @@ public class EntityDamageUtil {
 
     /** MK1 SEDNA damage system, basically re-implements the vanilla code (only from Entity, child class code is effectively ignored) with some adjustments */
     private static boolean attackEntitySEDNAPatch(EntityLivingBase living, DamageSource source, float amount, boolean ignoreIFrame, boolean allowSpecialCancel, double knockbackMultiplier) {
-        if(ignoreIFrame) living.lastDamage = 0F;
+        // Redundant reset: the pre-call in attackEntityFromNT already clears these, but
+        // the 0-damage pre-call to vanilla attackEntityFrom may have re-armed hurtResistantTime
+        // (e.g. on mobs whose override resets the timer even for 0 damage).
+        if (ignoreIFrame) { living.lastDamage = 0F; living.hurtResistantTime = 0; }
         if (MinecraftForge.EVENT_BUS.post(new LivingAttackEvent(living, source, amount)) && allowSpecialCancel) return false;
         if (living.isEntityInvulnerable(source)) return false;
         if (living.world.isRemote) return false;
@@ -333,7 +343,7 @@ public class EntityDamageUtil {
     }
 
     public static float applyArmorCalculationsNT(EntityLivingBase living, DamageSource source, float amount) {
-        if (!source.isUnblockable()) {
+        if (!source.isUnblockable() && !DamageResistanceHandler.bypassVanillaArmorThisDamage) {
             float armor = living.getTotalArmorValue();
 
             float toughness =

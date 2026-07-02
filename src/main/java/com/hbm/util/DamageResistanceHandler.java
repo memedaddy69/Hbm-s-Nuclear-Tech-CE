@@ -68,6 +68,14 @@ public class DamageResistanceHandler {
      * When false the GDT/GDM set bonuses apply instead of PHYS/Other resistances.
      */
     public static boolean isSEDNADamage = false;
+    /**
+     * When true, vanilla armor calculations (armor value + toughness) are skipped in
+     * {@link EntityDamageUtil#applyArmorCalculationsNT}.  SEDNA DT/DR resistances registered
+     * on armor sets via this handler still apply normally.
+     * Set by flame-type projectiles so they burn through bare flesh but are still mitigated
+     * by purpose-built heat-resistant SEDNA suits.
+     */
+    public static boolean bypassVanillaArmorThisDamage = false;
     private static final ThreadLocal<EntityLivingBase> mobDamageTarget = new ThreadLocal<>();
 
     /**
@@ -476,10 +484,18 @@ public class DamageResistanceHandler {
         isSEDNADamage = true;
     }
 
+    public static void setup(float dt, float dr, boolean bypassVanillaArmor) {
+        currentPDT = dt;
+        currentPDR = dr;
+        isSEDNADamage = true;
+        bypassVanillaArmorThisDamage = bypassVanillaArmor;
+    }
+
     public static void reset() {
         currentPDT = 0;
         currentPDR = 0;
         isSEDNADamage = false;
+        bypassVanillaArmorThisDamage = false;
         mobDamageTarget.remove();
     }
 
