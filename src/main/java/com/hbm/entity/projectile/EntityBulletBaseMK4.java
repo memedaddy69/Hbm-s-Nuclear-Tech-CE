@@ -257,6 +257,15 @@ public class EntityBulletBaseMK4 extends EntityThrowableInterp {
         return this.config.doesPenetrate;
     }
 
+    /**
+     * Deduplicate multipart hits for all damage classes except PLASMA.
+     * PLASMA (Tesla Cannon, plasma grenades, tesla coils) intentionally hits each part individually.
+     */
+    @Override
+    public boolean shouldDedupMultipartHits() {
+        return this.config != null && this.config.dmgClass != com.hbm.util.DamageResistanceHandler.DamageClass.PLASMA;
+    }
+
     @Override
     public boolean isSpectral() {
         return this.config.isSpectral;

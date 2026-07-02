@@ -2,6 +2,7 @@ package com.hbm.entity.projectile;
 
 import com.hbm.api.entity.IThrowable;
 import com.hbm.lib.Library;
+import com.hbm.util.EntityDamageUtil;
 import com.hbm.util.TrackerUtil;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -20,6 +21,7 @@ import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -213,6 +215,8 @@ public abstract class EntityThrowableNT extends Entity implements IProjectile, I
             } else {
                 AxisAlignedBB swept = getEntityBoundingBox().expand(motionX * mm, motionY * mm, motionZ * mm).grow(1.0D);
                 List<Entity> list = world.getEntitiesWithinAABBExcludingEntity(this, swept);
+                // Track already-hit multipart parents to avoid multi-hitting the same entity
+                HashSet<Entity> hitParents = shouldDedupMultipartHits() ? new HashSet<>() : null;
                 for (Entity entity : list) {
                     if (!entity.canBeCollidedWith()) continue;
                     if (filter != null && !filter.test(entity)) continue;
@@ -220,6 +224,10 @@ public abstract class EntityThrowableNT extends Entity implements IProjectile, I
                     AxisAlignedBB aabb = entity.getEntityBoundingBox().expand(hitbox, hitbox, hitbox);
                     RayTraceResult hitMop = aabb.calculateIntercept(pos, nextPos);
                     if (hitMop != null) {
+                        if (hitParents != null) {
+                            Entity parent = EntityDamageUtil.resolveMultipartParent(entity);
+                            if (!hitParents.add(parent)) continue; // already hit this parent this traversal
+                        }
                         onImpact(new RayTraceResult(entity, hitMop.hitVec));
                     }
                 }
@@ -280,6 +288,15 @@ public abstract class EntityThrowableNT extends Entity implements IProjectile, I
     }
 
     public boolean doesPenetrate() {
+        return false;
+    }
+
+    /**
+     * When true, the piercing hit loop will deduplicate hits against multipart entities,
+     * ensuring each logical parent entity is damaged at most once per traversal.
+     * Override and return true in subclasses that have a BulletConfig and are not PLASMA.
+     */
+    public boolean shouldDedupMultipartHits() {
         return false;
     }
 

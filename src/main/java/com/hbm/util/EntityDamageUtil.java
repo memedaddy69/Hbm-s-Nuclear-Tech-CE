@@ -7,6 +7,7 @@ import com.hbm.items.ModItems;
 import com.hbm.lib.internal.MethodHandleHelper;
 import com.hbm.main.MainRegistry;
 import net.minecraft.enchantment.EnchantmentHelper;
+import com.hbm.entity.mob.botprime.EntityWormBaseNT;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MultiPartEntityPart;
@@ -50,6 +51,25 @@ public class EntityDamageUtil {
     public static Entity unwrapMultiPart(Entity entity) {
         if (entity instanceof MultiPartEntityPart part && part.parent instanceof Entity parent) {
             return parent;
+        }
+        return entity;
+    }
+
+    /**
+     * Resolves an entity to its logical multipart parent for deduplication purposes.
+     * Handles both Forge MultiPartEntityPart (e.g. ender dragon) and the worm-style
+     * manual multipart pattern (EntityWormBaseNT body segments that forward to a head).
+     * Returns the entity itself if it has no parent or is already the parent.
+     */
+    public static Entity resolveMultipartParent(Entity entity) {
+        // Forge-style multipart (ender dragon, etc.)
+        if (entity instanceof MultiPartEntityPart part && part.parent instanceof Entity parent) {
+            return parent;
+        }
+        // Worm-style manual multipart: non-head segments forward damage to the head entity
+        if (entity instanceof EntityWormBaseNT worm && !worm.getIsHead()) {
+            Entity head = worm.getHead();
+            if (head != null) return head;
         }
         return entity;
     }

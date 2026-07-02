@@ -5,6 +5,8 @@ import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.particle.helper.HbmEffectNT;
+import com.hbm.util.DamageResistanceHandler;
+import com.hbm.util.EntityDamageUtil;
 import com.hbm.util.Vec3NT;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
@@ -27,6 +29,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashSet;
 import java.util.List;
 @AutoRegister(name = "entity_beam_mk4", trackingRange = 256)
 public class EntityBulletBeamBase extends Entity implements IEntityAdditionalSpawnData {
@@ -188,6 +191,10 @@ public class EntityBulletBeamBase extends Entity implements IEntityAdditionalSpa
                 }
             }
 
+            // Dedup set for multipart entities: null when PLASMA (PLASMA hits each part intentionally)
+            boolean dedupBeam = this.config != null && this.config.dmgClass != DamageResistanceHandler.DamageClass.PLASMA;
+            HashSet<Entity> beamHitParents = dedupBeam ? new HashSet<>() : null;
+
             for (Entity value : list) {
 
                 if (value.canBeCollidedWith() && value != thrower) {
@@ -202,6 +209,11 @@ public class EntityBulletBeamBase extends Entity implements IEntityAdditionalSpa
                         // if penetration is enabled, run impact for all intersecting entities
                         if (this.doesPenetrate()) {
                             if(hitCoin == null || dist < closestCoin) {
+                                // Skip if we already hit this multipart parent this pass
+                                if (beamHitParents != null) {
+                                    Entity parent = EntityDamageUtil.resolveMultipartParent(value);
+                                    if (!beamHitParents.add(parent)) continue;
+                                }
                                 this.onImpact(new RayTraceResult(value, hitMop.hitVec));
                             }
                         } else {
