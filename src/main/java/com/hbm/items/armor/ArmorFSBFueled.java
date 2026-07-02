@@ -147,7 +147,7 @@ public class ArmorFSBFueled extends ArmorFSB implements IFillableItem {
 
 	@Override
 	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-		return super.canApplyAtEnchantingTable(stack, enchantment);
+		return false;
 	}
 
 	@Override
